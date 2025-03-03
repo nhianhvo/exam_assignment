@@ -15,23 +15,15 @@ class FeedViewModel: ObservableObject {
     
     func loadInitialData() {
         let data: FeedData = DataLoader.loadJSON("current")
-        let adData: AdData = DataLoader.loadJSON("adv")
         
         var items: [FeedItem] = []
-        items.append(FeedItem(id: UUID().uuidString, url: data.video, isVideo: true, isAd: false))
+//        items.append(FeedItem(id: UUID().uuidString, url: data.video, isVideo: true, isAd: false))
         
         items.append(contentsOf: data.images.map {
             FeedItem(id: "\($0.id)", url: $0.url, isVideo: false, isAd: false)
         })
         
-        let fibonacciIndices = [1, 2, 3, 5, 8, 13, 21]
-        for index in fibonacciIndices where index < items.count {
-            if let ad = adData.ads.randomElement() {
-                items.insert(FeedItem(id: ad.id, url: ad.url, isVideo: false, isAd: true), at: index)
-            }
-        }
-        
-        feedItems = items
+        feedItems = mixAdvItems(items: items)
     }
     
     func loadNextData() {
@@ -41,7 +33,7 @@ class FeedViewModel: ObservableObject {
             FeedItem(id: "\($0.id)", url: $0.url, isVideo: false, isAd: false)
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.feedItems.append(contentsOf: newItems)
+            self.feedItems.append(contentsOf: self.mixAdvItems(items: newItems))
             self.isLoadingNext = false
         }
     }
@@ -53,7 +45,19 @@ class FeedViewModel: ObservableObject {
         let newItems = data.images.map {
             FeedItem(id: "\($0.id)", url: $0.url, isVideo: false, isAd: false)
         }
-        feedItems.insert(contentsOf: newItems, at: 1)
+        feedItems.insert(contentsOf: mixAdvItems(items: newItems), at: 0)
         isRefreshing = false
+    }
+    
+    func mixAdvItems(items: [FeedItem]) -> [FeedItem]{
+        var result = items
+        let advData: AdData = DataLoader.loadJSON("adv")
+        let fibonacciIndices = Utils.getFibonacciArray(count: items.count)
+        for index in fibonacciIndices where index < items.count {
+            if let ad = advData.ads.randomElement() {
+                result.insert(FeedItem(id: ad.id, url: ad.url, isVideo: false, isAd: true), at: index)
+            }
+        }
+        return result
     }
 }
