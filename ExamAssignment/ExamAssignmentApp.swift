@@ -11,7 +11,7 @@ import SwiftUI
 struct ExamAssignmentApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            FeedView()
         }
     }
 }
