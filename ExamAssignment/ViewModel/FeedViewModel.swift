@@ -12,11 +12,15 @@ class FeedViewModel: ObservableObject {
     @Published var feedItems: [FeedItem] = []
     @Published var isLoadingNext = false
     @Published var isRefreshing = false
+    @Published var videoItem: FeedItem?
     
     func loadInitialData() {
         let data: FeedData = DataLoader.loadJSON("current")
         
         var items: [FeedItem] = []
+        
+        
+        videoItem = FeedItem(id: UUID().uuidString, url: "https://videojs.com/advanced/?video=disneys-oceans", isVideo: true, isAd: false)
 //        items.append(FeedItem(id: UUID().uuidString, url: data.video, isVideo: true, isAd: false))
         
         items.append(contentsOf: data.images.map {
