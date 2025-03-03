@@ -8,13 +8,11 @@ import SwiftUI
 
 struct VideoSectionView: View {
     let item: FeedItem?
-    
     var body: some View {
         Group {
             if let item = item, item.isVideo {
                 VideoView(url: item.url)
                     .frame(maxWidth: .infinity)
-                    .frame(height: 200)
                     .cornerRadius(10)
                     .id(item.id)
             }

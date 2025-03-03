@@ -20,7 +20,7 @@ class FeedViewModel: ObservableObject {
         var items: [FeedItem] = []
         
         
-        videoItem = FeedItem(id: UUID().uuidString, url: "https://videojs.com/advanced/?video=disneys-oceans", isVideo: true, isAd: false)
+        videoItem = FeedItem(id: UUID().uuidString, url: data.video, isVideo: true, isAd: false)
 //        items.append(FeedItem(id: UUID().uuidString, url: data.video, isVideo: true, isAd: false))
         
         items.append(contentsOf: data.images.map {

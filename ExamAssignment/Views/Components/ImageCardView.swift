@@ -16,7 +16,7 @@ struct ImageCardView: View {
     
     var body: some View {
         ZStack {
-            AsyncImage(url: URL(string: url)) { phase in
+            CachedAsyncImage(url: URL(string: url)) { phase in
                 switch phase {
                 case .success(let image):
                     image
