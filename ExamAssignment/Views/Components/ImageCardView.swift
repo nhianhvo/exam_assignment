@@ -33,11 +33,11 @@ struct ImageCardView: View {
                             }
                         )
                 case .failure:
-                    Color.gray
+                    failureView
                 case .empty:
-                    ProgressView()
+                    loadingView
                 @unknown default:
-                    Color.gray
+                    unknownView
                 }
             }
             
@@ -76,4 +76,54 @@ struct ImageCardView: View {
         tagPosition = (size.width * 0.5, size.height * 0.5)
         tagPrice = "$99.99"
     }
+    
+
+    private var loadingView: some View {
+        ZStack {
+                Rectangle()
+                    .fill(Color.gray.opacity(0.3))
+                    .cornerRadius(10)
+                
+                ProgressView()
+                    .tint(.gray)
+            }
+        }
+        
+    private var failureView: some View {
+        ZStack {
+                Rectangle()
+                    .fill(Color.gray.opacity(0.3))
+                    .cornerRadius(10)
+                
+            VStack(spacing: 8) {
+                    Image(systemName: "photo.fill")
+                        .font(.system(size: 60))
+                        .foregroundColor(.gray)
+                    
+                    Text("Image not found")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                }
+            }
+        }
+        
+    private var unknownView: some View {
+        ZStack {
+                Rectangle()
+                    .fill(Color.gray.opacity(0.3))
+                    .cornerRadius(10)
+                
+                VStack(spacing: 8) {
+                    Image(systemName: "questionmark.circle.fill")
+                        .font(.system(size: 60))
+                        .foregroundColor(.gray)
+                    
+                    Text("Unknown error")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                }
+            }
+        }
+        
 }
+

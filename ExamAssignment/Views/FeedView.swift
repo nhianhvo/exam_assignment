@@ -22,29 +22,24 @@ struct FeedView: View {
     
     var body: some View {
         NavigationView {
-            ScrollView {
-                LazyVStack(spacing: 10) {
-                    VideoSectionView(item: viewModel.feedItems.first)
-                    
-                    GridSectionView(
-                        items: Array(viewModel.feedItems.dropFirst()),
-                        columns: columns,
-                        onLastItem: {
-                            if !viewModel.isLoadingNext {
-                                viewModel.loadNextData()
-                            }
+            VStack{
+                VideoSectionView(item: viewModel.videoItem)
+                ScrollView {
+                    MasonryVStack(columns: 2, spacing: 5) {
+                        ForEach(viewModel.feedItems.dropFirst()) { item in
+                            ImageCardView(url: item.url, isAd: item.isAd)
+                                .onAppear {
+                                   
+                                }
                         }
-                    )
-                    
-                    if viewModel.isLoadingNext {
-                        ProgressView()
-                            .padding()
+                        
                     }
+                    
+                }.refreshable {
+                    await viewModel.loadPrevData()
                 }
-            }
-            .refreshable {
-                await viewModel.loadPrevData()
-            }
+            }.padding()
+            
             .navigationTitle("Examination")
         }
         .onAppear {
