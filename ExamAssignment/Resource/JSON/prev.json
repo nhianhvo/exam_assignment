@@ -1,25 +1,145 @@
 {
   "video": "https://coverr.co/s3/mp4/City-Night.mp4",
   "images": [
-    {"id": 1001, "url": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&q=80&w=1080"},
-    {"id": 1002, "url": "https://images.unsplash.com/photo-1516676158449-f9db75b6e3d?ixlib=rb-4.0.3&q=80&w=1080"},
-    {"id": 1003, "url": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3&q=80&w=1080"},
-    {"id": 1004, "url": "https://images.unsplash.com/photo-1502630859934-b3b41d18206c?ixlib=rb-4.0.3&q=80&w=1080"},
-    {"id": 1005, "url": "https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-4.0.3&q=80&w=1080"},
-    {"id": 1006, "url": "https://images.unsplash.com/photo-1530099486328-e021101a494a?ixlib=rb-4.0.3&q=80&w=1080"},
-    {"id": 1007, "url": "https://images.unsplash.com/photo-1494548162494-384bba4ab999?ixlib=rb-4.0.3&q=80&w=1080"},
-    {"id": 1008, "url": "https://images.unsplash.com/photo-1519996456112-9f80e4e421f8?ixlib=rb-4.0.3&q=80&w=1080"},
-    {"id": 1009, "url": "https://images.unsplash.com/photo-1524758631624-e2822e304c36?ixlib=rb-4.0.3&q=80&w=1080"},
-    {"id": 1010, "url": "https://images.unsplash.com/photo-1517760444937-f6397edcbbcd?ixlib=rb-4.0.3&q=80&w=1080"},
-    {"id": 1011, "url": "https://images.unsplash.com/photo-1496096265110-f83ad7f96608?ixlib=rb-4.0.3&q=80&w=1080"},
-    {"id": 1012, "url": "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?ixlib=rb-4.0.3&q=80&w=1080"},
-    {"id": 1013, "url": "https://images.unsplash.com/photo-1516534775068-ba3e457a69ea?ixlib=rb-4.0.3&q=80&w=1080"},
-    {"id": 1014, "url": "https://images.unsplash.com/photo-1517456837842-2944a41879b2?ixlib=rb-4.0.3&q=80&w=1080"},
-    {"id": 1015, "url": "https://images.unsplash.com/photo-1518495973542-4542c06a5843?ixlib=rb-4.0.3&q=80&w=1080"},
-    {"id": 1016, "url": "https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?ixlib=rb-4.0.3&q=80&w=1080"},
-    {"id": 1017, "url": "https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b?ixlib=rb-4.0.3&q=80&w=1080"},
-    {"id": 1018, "url": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&q=80&w=1080"},
-    {"id": 1019, "url": "https://images.unsplash.com/photo-1513703207085-1a9f2e0e8b4b?ixlib=rb-4.0.3&q=80&w=1080"},
-    {"id": 1020, "url": "https://images.unsplash.com/photo-1518623489648-a173ef7824f3?ixlib=rb-4.0.3&q=80&w=1080"}
+    {
+      "id": "1001",
+      "url": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&q=80&w=1080",
+      
+      "price": "159.99",
+      "tagPosition": { "x": 0.5, "y": 0.6 }
+    },
+    {
+      "id": "1002",
+      "url": "https://images.unsplash.com/photo-1516676158449-f9db75b6e3d?ixlib=rb-4.0.3&q=80&w=1080",
+      
+      "price": null,
+      "tagPosition": null
+    },
+    {
+      "id": "1003",
+      "url": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3&q=80&w=1080",
+      
+      "price": "229.99",
+      "tagPosition": { "x": 0.4, "y": 0.3 }
+    },
+    {
+      "id": "1004",
+      "url": "https://images.unsplash.com/photo-1502630859934-b3b41d18206c?ixlib=rb-4.0.3&q=80&w=1080",
+      
+      "price": "189.99",
+      "tagPosition": { "x": 0.7, "y": 0.5 }
+    },
+    {
+      "id": "1005",
+      "url": "https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-4.0.3&q=80&w=1080",
+      
+      "price": null,
+      "tagPosition": null
+    },
+    {
+      "id": "1006",
+      "url": "https://images.unsplash.com/photo-1530099486328-e021101a494a?ixlib=rb-4.0.3&q=80&w=1080",
+      
+      "price": "269.99",
+      "tagPosition": { "x": 0.3, "y": 0.6 }
+    },
+    {
+      "id": "1007",
+      "url": "https://images.unsplash.com/photo-1494548162494-384bba4ab999?ixlib=rb-4.0.3&q=80&w=1080",
+      
+      "price": "149.99",
+      "tagPosition": { "x": 0.6, "y": 0.4 }
+    },
+    {
+      "id": "1008",
+      "url": "https://images.unsplash.com/photo-1519996456112-9f80e4e421f8?ixlib=rb-4.0.3&q=80&w=1080",
+      
+      "price": null,
+      "tagPosition": null
+    },
+    {
+      "id": "1009",
+      "url": "https://images.unsplash.com/photo-1524758631624-e2822e304c36?ixlib=rb-4.0.3&q=80&w=1080",
+      
+      "price": "199.99",
+      "tagPosition": { "x": 0.5, "y": 0.7 }
+    },
+    {
+      "id": "1010",
+      "url": "https://images.unsplash.com/photo-1517760444937-f6397edcbbcd?ixlib=rb-4.0.3&q=80&w=1080",
+      
+      "price": null,
+      "tagPosition": null
+    },
+    {
+      "id": "1011",
+      "url": "https://images.unsplash.com/photo-1496096265110-f83ad7f96608?ixlib=rb-4.0.3&q=80&w=1080",
+      
+      "price": "289.99",
+      "tagPosition": { "x": 0.4, "y": 0.5 }
+    },
+    {
+      "id": "1012",
+      "url": "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?ixlib=rb-4.0.3&q=80&w=1080",
+      
+      "price": "179.99",
+      "tagPosition": { "x": 0.7, "y": 0.3 }
+    },
+    {
+      "id": "1013",
+      "url": "https://images.unsplash.com/photo-1516534775068-ba3e457a69ea?ixlib=rb-4.0.3&q=80&w=1080",
+      
+      "price": null,
+      "tagPosition": null
+    },
+    {
+      "id": "1014",
+      "url": "https://images.unsplash.com/photo-1517456837842-2944a41879b2?ixlib=rb-4.0.3&q=80&w=1080",
+      
+      "price": "239.99",
+      "tagPosition": { "x": 0.5, "y": 0.4 }
+    },
+    {
+      "id": "1015",
+      "url": "https://images.unsplash.com/photo-1518495973542-4542c06a5843?ixlib=rb-4.0.3&q=80&w=1080",
+      
+      "price": null,
+      "tagPosition": null
+    },
+    {
+      "id": "1016",
+      "url": "https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?ixlib=rb-4.0.3&q=80&w=1080",
+      
+      "price": "169.99",
+      "tagPosition": { "x": 0.3, "y": 0.7 }
+    },
+    {
+      "id": "1017",
+      "url": "https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b?ixlib=rb-4.0.3&q=80&w=1080",
+      
+      "price": "299.99",
+      "tagPosition": { "x": 0.6, "y": 0.6 }
+    },
+    {
+      "id": "1018",
+      "url": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&q=80&w=1080",
+      
+      "price": "209.99",
+      "tagPosition": { "x": 0.4, "y": 0.4 }
+    },
+    {
+      "id": "1019",
+      "url": "https://images.unsplash.com/photo-1513703207085-1a9f2e0e8b4b?ixlib=rb-4.0.3&q=80&w=1080",
+      
+      "price": "259.99",
+      "tagPosition": { "x": 0.7, "y": 0.5 }
+    },
+    {
+      "id": "1020",
+      "url": "https://images.unsplash.com/photo-1518623489648-a173ef7824f3?ixlib=rb-4.0.3&q=80&w=1080",
+      
+      "price": "219.99",
+      "tagPosition": { "x": 0.5, "y": 0.3 }
+    }
   ]
 }

@@ -9,9 +9,16 @@ import SwiftUI
 
 @main
 struct ExamAssignmentApp: App {
+    
     var body: some Scene {
         WindowGroup {
-            FeedView()
+            FeedView().environmentObject(AppViewModel())
+                .onAppear {
+                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+                                            let supportedOrientations: UIInterfaceOrientationMask = [.portrait, .landscape]
+                                            windowScene.requestGeometryUpdate(.iOS(interfaceOrientations: supportedOrientations))
+                                        }
+                }
         }
     }
 }

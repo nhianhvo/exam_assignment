@@ -13,6 +13,11 @@ class DataLoader {
               let data = try? Data(contentsOf: url) else {
             fatalError("Don't load file JSON: \(filename)")
         }
-        return try! JSONDecoder().decode(T.self, from: data)
+        
+        let decoder = JSONDecoder()
+        guard let loaded = try? decoder.decode(T.self, from: data) else {
+            fatalError("Failed to decode \(filename): \(String(describing: try? JSONSerialization.jsonObject(with: data)))")
+        }
+        return loaded
     }
 }
