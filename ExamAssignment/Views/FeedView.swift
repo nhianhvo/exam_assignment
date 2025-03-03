@@ -10,38 +10,57 @@ import SwiftUI
 
 struct FeedView: View {
     @StateObject private var viewModel = FeedViewModel()
+    @State private var scrollOffset: CGFloat = 0
+    @EnvironmentObject private var appViewModel: AppViewModel
     
-    private let columns: [GridItem] = {
-        #if os(iOS)
-            let count = UIDevice.current.userInterfaceIdiom == .pad ? 4 : 2
-        #else
-            let count = 2
-        #endif
-        return Array(repeating: GridItem(.flexible(), spacing: 5), count: count)
-    }()
+    private func columns() -> Int{
+        let device = UIDevice.current.userInterfaceIdiom
+        if device == .phone {
+            return 2
+        } else {
+            return 3
+        }
+    }
     
     var body: some View {
-        NavigationView {
-            VStack{
-                VideoSectionView(item: viewModel.videoItem)
-                ScrollView {
-                    MasonryVStack(columns: 2, spacing: 5) {
-                        ForEach(viewModel.feedItems.dropFirst()) { item in
-                            ImageCardView(url: item.url, isAd: item.isAd)
-                                .onAppear {
-                                   
-                                }
-                        }
+        NavigationStack {
+            if appViewModel.isLandscape {
+                HStack {
+                    VideoSectionView(item: viewModel.videoItem).frame( height: .infinity)
                         
-                    }
-                    
-                }.refreshable {
-                    await viewModel.loadPrevData()
-                }
-            }.padding()
-            
-            .navigationTitle("Examination")
-        }
+                    FeedGridView(
+                        columns: 2,
+                        items: Array(viewModel.feedItems.dropFirst()),
+                        onLoadMore: {
+                            Task {
+                                 viewModel.loadNextData()
+                            }
+                        },
+                        onRefresh: {
+                            await viewModel.loadPrevData()
+                        }
+                    )
+                }.padding()
+                
+            }else{
+                VStack{
+                    VideoSectionView(item: viewModel.videoItem).frame(height: columns() == 2 ? 200 : 300)
+                        
+                    FeedGridView(
+                        columns: columns(),
+                        items: Array(viewModel.feedItems.dropFirst()),
+                        onLoadMore: {
+                            Task {
+                                 viewModel.loadNextData()
+                            }
+                        },
+                        onRefresh: {
+                            await viewModel.loadPrevData()
+                        }
+                    )
+                }.padding()
+            }
+        }.navigationTitle("Examination")
         .onAppear {
             viewModel.loadInitialData()
         }
@@ -52,5 +71,12 @@ struct FeedView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         FeedView()
+    }
+}
+
+struct ScrollOffsetPreferenceKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }
