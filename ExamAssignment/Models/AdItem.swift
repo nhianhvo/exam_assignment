@@ -6,6 +6,6 @@
 //
 
 struct AdItem: Codable {
-    let id: String
+    let id: Int
     let url: String
 }

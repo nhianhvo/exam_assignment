@@ -27,10 +27,9 @@ struct FeedView: View {
             if appViewModel.isLandscape {
                 HStack {
                     VideoSectionView(item: viewModel.videoItem).frame( height: .infinity)
-                        
                     FeedGridView(
                         columns: 2,
-                        items: Array(viewModel.feedItems.dropFirst()),
+                        items: Array(viewModel.feedItems),
                         onLoadMore: {
                             Task {
                                  viewModel.loadNextData()
@@ -45,10 +44,9 @@ struct FeedView: View {
             }else{
                 VStack{
                     VideoSectionView(item: viewModel.videoItem).frame(height: columns() == 2 ? 200 : 300)
-                        
                     FeedGridView(
                         columns: columns(),
-                        items: Array(viewModel.feedItems.dropFirst()),
+                        items: Array(viewModel.feedItems),
                         onLoadMore: {
                             Task {
                                  viewModel.loadNextData()

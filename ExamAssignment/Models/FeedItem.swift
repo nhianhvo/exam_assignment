@@ -6,7 +6,7 @@
 //
 
 struct FeedItem: Identifiable, Codable {
-    let id: String
+    let id: Int
     let url: String
     let isVideo: Bool
     let isAd: Bool
