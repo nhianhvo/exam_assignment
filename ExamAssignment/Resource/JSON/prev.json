@@ -1,5 +1,5 @@
 {
-  "video": "https://coverr.co/s3/mp4/City-Night.mp4",
+  "video": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
   "images": [
       {"id": 0, "url": "https://images.unsplash.com/photo-1518623489648-a173ef7824f3?ixlib=rb-4.0.3&q=80&w=1080"},
         {"id": 1, "url": "https://images.unsplash.com/photo-1542204165-65bf26472b9b?ixlib=rb-4.0.3&q=80&w=1080"},

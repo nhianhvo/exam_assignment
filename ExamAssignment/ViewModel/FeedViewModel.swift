@@ -12,6 +12,11 @@ class FeedViewModel: ObservableObject {
     @Published var feedItems: [FeedItem] = []
     @Published var videoItem: FeedItem?
     
+    @Published var isLoadingNextData: Bool = false
+    @Published var isReachedEndOfData: Bool = false
+    private let itemsPerPatch = 20
+    @Published var currentPatchIndex: Int = 0
+    
     func loadInitialData() {
         let data = FeedRepository.fetchData()
         var items: [FeedItem] = []
@@ -22,17 +27,36 @@ class FeedViewModel: ObservableObject {
         feedItems = mixAdvToFeedItems(items: items)
     }
     
-    func loadNextData() {
+    func loadNextData() async {
+        
+        guard !isLoadingNextData else {
+            print("Still loading, skipping...")
+            return
+        }
+       
+        await MainActor.run { isLoadingNextData = true }
+       
         if let fromIndex = feedItems.last?.id, let data = FeedRepository.fetchNewData(fromIndex: fromIndex){
-            videoItem = FeedItem(id: 0, url: data.video, isVideo: true, isAd: false)
+            
             let newItems = data.images.map {
                 FeedItem(id: $0.id, url: $0.url, isVideo: false, isAd: false)
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                self.feedItems.append(contentsOf: self.mixAdvToFeedItems(items: newItems))
-            }
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//                self.feedItems.append(contentsOf: self.mixAdvToFeedItems(items: newItems))
+//            }
+            try? await Task.sleep(nanoseconds: 1_000_000_000) // 1 second
+                        
+                await MainActor.run {
+                    self.videoItem = FeedItem(id: 0, url: data.video, isVideo: true, isAd: false)
+                    self.feedItems.append(contentsOf: self.mixAdvToFeedItems(items: newItems))
+                    self.isLoadingNextData = false
+                }
         }else{
             //Has no new data
+            await MainActor.run {
+                self.isLoadingNextData = false
+                self.isReachedEndOfData = true
+            }
             return
         }
     }

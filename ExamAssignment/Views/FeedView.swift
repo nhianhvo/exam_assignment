@@ -12,6 +12,7 @@ struct FeedView: View {
     @StateObject private var viewModel = FeedViewModel()
     @State private var scrollOffset: CGFloat = 0
     @EnvironmentObject private var appViewModel: AppViewModel
+    let videoViewModel = VideoViewModel()
     
     private func columns() -> Int{
         let device = UIDevice.current.userInterfaceIdiom
@@ -24,45 +25,55 @@ struct FeedView: View {
     
     var body: some View {
         NavigationStack {
-            if appViewModel.isLandscape {
-                HStack {
-                    VideoSectionView(item: viewModel.videoItem).frame( height: .infinity)
-                    FeedGridView(
-                        columns: 2,
-                        items: Array(viewModel.feedItems),
-                        onLoadMore: {
-                            Task {
-                                 viewModel.loadNextData()
-                            }
-                        },
-                        onRefresh: {
-                            await viewModel.loadPrevData()
-                        }
-                    )
-                }.padding()
-                
-            }else{
-                VStack{
-                    VideoSectionView(item: viewModel.videoItem).frame(height: columns() == 2 ? 200 : 300)
-                    FeedGridView(
-                        columns: columns(),
-                        items: Array(viewModel.feedItems),
-                        onLoadMore: {
-                            Task {
-                                 viewModel.loadNextData()
-                            }
-                        },
-                        onRefresh: {
-                            await viewModel.loadPrevData()
-                        }
-                    )
-                }.padding()
+            GeometryReader{ geometry in
+                let isLandscape = geometry.size.width > geometry.size.height
+                let videoHeight = isLandscape ? geometry.size.height : geometry.size.height * 0.25
+                let videoSection = VideoSectionView(item: viewModel.videoItem,videoViewModel: videoViewModel).frame( height: videoHeight)
+                                .id("PersistentVideoSection")
+                if appViewModel.isLandscape {
+                    HStack {
+                        videoSection
+                        createFeedGridView(columns: 2)
+                    }.padding()
+                    
+                }else{
+                    VStack{
+                        videoSection
+                        createFeedGridView(columns: columns())
+                    }.padding()
+                }
             }
+            
+            
         }.navigationTitle("Examination")
         .onAppear {
             viewModel.loadInitialData()
         }
     }
+    
+    private func createFeedGridView(columns: Int) -> some View {
+            FeedGridView(
+                columns: columns,
+                items: Array(viewModel.feedItems),
+                onLoadMore: {
+                    Task {
+                        await viewModel.loadNextData()
+                      
+                    }
+                },
+                onRefresh: {
+                    await viewModel.loadPrevData()
+                },
+                onScroll: { isScrolling in
+                    if isScrolling {
+                        videoViewModel.pause()
+                    } else {
+                        videoViewModel.play()
+                    }
+                }
+            )
+            .environmentObject(viewModel)
+        }
 }
 
 
@@ -72,9 +83,3 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 
-struct ScrollOffsetPreferenceKey: PreferenceKey {
-    static var defaultValue: CGFloat = 0
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = nextValue()
-    }
-}
