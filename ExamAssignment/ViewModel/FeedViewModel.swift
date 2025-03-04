@@ -24,6 +24,7 @@ class FeedViewModel: ObservableObject {
     
     func loadNextData() {
         if let fromIndex = feedItems.last?.id, let data = FeedRepository.fetchNewData(fromIndex: fromIndex){
+            videoItem = FeedItem(id: 0, url: data.video, isVideo: true, isAd: false)
             let newItems = data.images.map {
                 FeedItem(id: $0.id, url: $0.url, isVideo: false, isAd: false)
             }
@@ -38,6 +39,7 @@ class FeedViewModel: ObservableObject {
     
     func loadPrevData() async {
         if let fromIndex = feedItems.first?.id, let data = FeedRepository.fetchOldData(fromIndex: fromIndex){
+            videoItem = FeedItem(id: 0, url: data.video, isVideo: true, isAd: false)
             let newItems = data.images.map {
                 FeedItem(id: $0.id, url: $0.url, isVideo: false, isAd: false)
             }
