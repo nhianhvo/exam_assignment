@@ -1,5 +1,5 @@
 {
-  "video": "https://coverr.co/s3/mp4/Mountain-Sunrise.mp4",
+  "video": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
   "images": [
       {"id": 40, "url": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&q=80&w=1080"},
       {"id": 41, "url": "https://images.unsplash.com/photo-1516676158449-f9db75b6e3d?ixlib=rb-4.0.3&q=80&w=1080"},

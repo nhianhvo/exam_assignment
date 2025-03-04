@@ -1,5 +1,5 @@
 {
-  "video": "https://coverr.co/s3/mp4/Beach-Waves.mp4",
+  "video": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
   "images": [
       {"id": 20, "url": "https://images.unsplash.com/photo-1523049673857-e021101a494a?ixlib=rb-4.0.3&q=80&w=1080"},
       {"id": 21, "url": "https://images.unsplash.com/photo-1530099486328-e021101a494a?ixlib=rb-4.0.3&q=80&w=1080"},

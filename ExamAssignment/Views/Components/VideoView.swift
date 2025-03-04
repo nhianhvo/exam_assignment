@@ -10,16 +10,15 @@ import AVKit
 
 struct VideoView: View {
     let url: String
-    @State private var player: AVPlayer?
+    @ObservedObject var viewModel: VideoViewModel
     
     var body: some View {
-        VideoPlayer(player: player)
+        VideoPlayer(player: viewModel.player)
             .onAppear {
-                player = AVPlayer(url: URL(string: url)!)
-                player?.play()
-            }
-            .onDisappear {
-                player?.pause()
-            }
+                viewModel.setupPlayer(with: url)
+            }.id("VideoPlayer")
+//            .onDisappear {
+//                viewModel.cleanup()
+//            }
     }
 }
