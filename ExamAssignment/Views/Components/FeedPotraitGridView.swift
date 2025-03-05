@@ -6,15 +6,16 @@
 //
 import SwiftUI
 
-struct FeedGridView: View {
+struct FeedPotraitGridView: View {
     let columns: Int
-    let items: [FeedItem]
     let onLoadMore: () -> Void
     let onRefresh: () async -> Void
     let onScroll: (Bool) -> Void
+    let videoHeight: CGFloat?
     
     @State private var scrollOffset: CGFloat = 0
     @EnvironmentObject private var feedViewModel: FeedViewModel
+    @StateObject private var videoViewModel: VideoViewModel = .shared
     @State private var isScrolling = false
     
     var body: some View {
@@ -27,17 +28,29 @@ struct FeedGridView: View {
             }
             .frame(height: 0)
             
-            MasonryVStack(columns: columns, spacing: 5) {
-                ForEach(items) { item in
-                    ImageCardView(url: item.url, isAd: item.isAd).id(item.id)
-                }
-            }
+            ForEach(feedViewModel.patches) { patch in
+                            VStack(spacing: 0) {
+                                VideoSectionView(item: patch.video)
+                                    .frame(height: videoHeight)
+                                    .id("Video-\(patch.id)")
+                                    .padding(.vertical)
+                                
+                                MasonryVStack(columns: columns, spacing: 5) {
+                                    ForEach(patch.images) { item in
+                                        ImageCardView(url: item.url, isAd: item.isAd)
+                                            .id(item.id)
+                                    }
+                                }
+                            }
+                        }
+            
             if feedViewModel.isLoadingNextData && !feedViewModel.isReachedEndOfData {
                 ProgressView().padding()
             }
         }
         .refreshable {
             await onRefresh()
+            videoViewModel.pause()
         }
         
         .coordinateSpace(name: "scroll")

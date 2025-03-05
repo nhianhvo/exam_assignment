@@ -27,34 +27,42 @@ struct FeedView: View {
         NavigationStack {
             GeometryReader{ geometry in
                 let isLandscape = geometry.size.width > geometry.size.height
-                let videoHeight = isLandscape ? geometry.size.height : geometry.size.height * 0.25
-                let videoSection = VideoSectionView(item: viewModel.videoItem,videoViewModel: videoViewModel).frame( height: videoHeight)
-                                .id("PersistentVideoSection")
+                let videoHeight = isLandscape ? geometry.size.height * 0.99 : geometry.size.height * 0.25
                 if appViewModel.isLandscape {
-                    HStack {
-                        videoSection
-                        createFeedGridView(columns: 2)
-                    }.padding()
+                    FeedLandscapeGridView(columns: 2, onLoadMore: {
+                        Task {
+                            await viewModel.loadNextData()
+                          
+                        }
+                    }, onRefresh: {
+                        await viewModel.loadPrevData()
+                    }, onScroll: { isScrolling in
+                        if isScrolling {
+                            videoViewModel.pause()
+                        } else {
+                            videoViewModel.play()
+                        }
+                    }, videoHeight: videoHeight)
                     
                 }else{
-                    VStack{
-                        videoSection
-                        createFeedGridView(columns: columns())
-                    }.padding()
+                    createFeedGridView(columns: columns(),sizeHeight: videoHeight).padding()
                 }
             }
             
             
         }.navigationTitle("Examination")
+         .navigationBarTitleDisplayMode(.inline)
+         .ignoresSafeArea(.keyboard)
+         .environmentObject(PlayerCoordinator.shared)
+         .environmentObject(viewModel)
         .onAppear {
             viewModel.loadInitialData()
         }
     }
     
-    private func createFeedGridView(columns: Int) -> some View {
-            FeedGridView(
+    private func createFeedGridView(columns: Int,sizeHeight:CGFloat? = nil) -> some View {
+        FeedPotraitGridView(
                 columns: columns,
-                items: Array(viewModel.feedItems),
                 onLoadMore: {
                     Task {
                         await viewModel.loadNextData()
@@ -70,9 +78,9 @@ struct FeedView: View {
                     } else {
                         videoViewModel.play()
                     }
-                }
+                },
+                videoHeight: sizeHeight
             )
-            .environmentObject(viewModel)
         }
 }
 
