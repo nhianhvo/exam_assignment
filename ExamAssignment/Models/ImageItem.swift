@@ -8,4 +8,6 @@
 struct ImageItem: Codable {
     let id: Int
     let url: String
+    let width: Int?
+    let height: Int?
 }
