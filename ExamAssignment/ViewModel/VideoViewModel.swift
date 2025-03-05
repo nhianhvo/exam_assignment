@@ -51,7 +51,7 @@ class VideoViewModel: ObservableObject {
         player?.play()
     }
     
-    func cleanup() async {
+    func cleanup() {
         
         if let observer = timeObserver {
             player?.removeTimeObserver(observer)
