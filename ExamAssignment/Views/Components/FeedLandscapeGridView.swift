@@ -21,10 +21,10 @@ struct FeedLandscapeGridView: View {
     
     var body: some View {
         HStack(spacing: 0) {
-            VideoSectionView(item: feedViewModel.videoItem)
+            VideoSectionView(item: feedViewModel.videoItem,videoViewModel: videoViewModel,feedViewModel: feedViewModel)
                 .frame(height: videoHeight)
                 .id("Video-\(feedViewModel.videoItem?.id ?? 0)")
-                .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
+                .padding(EdgeInsets(top: 5, leading: 0, bottom: 10, trailing: 0))
             ScrollView {
                 GeometryReader { proxy in
                     Color.clear.preference(

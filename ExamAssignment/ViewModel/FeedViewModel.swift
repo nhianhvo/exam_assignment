@@ -15,11 +15,37 @@ class FeedViewModel: ObservableObject {
     @Published var isLoadingNextData: Bool = false
     @Published var isReachedEndOfData: Bool = false
     @Published var patches: [Patch] = []
+    @Published var videoViewModels: [VideoViewModel] = [VideoViewModel()]
     private let itemsPerPatch = 20
     @Published var currentPatchIndex: Int = 0
+    @Published var currentPlayingId: Int?
+    
+    func setCurrentPlaying(_ id: Int) {
+        currentPlayingId = id
+    }
+    
+    private func setupVideoViewModels(isPrevData: Bool = false) {
+            print("📱 Setting up VideoViewModels")
+            print("   Patches count:", patches.count)
+            print("   Current ViewModels:", videoViewModels.count)
+            
+            while videoViewModels.count < patches.count {
+                if(isPrevData){
+                    videoViewModels.insert(VideoViewModel(),at: 0)
+                }else{
+                    videoViewModels.append(VideoViewModel())
+                }
+                print("   Added new ViewModel")
+            }
+            
+            if videoViewModels.count > patches.count {
+                videoViewModels = Array(videoViewModels.prefix(patches.count))
+                print("   Trimmed ViewModels to", videoViewModels.count)
+            }
+        }
     
     private func organizeIntoPatch(_ items: [FeedItem], isPrevData: Bool = false) {
-            var currentPatchId = patches.count
+            var currentPatchId = patches.count + 1
             var currentIndex = 0
             
             while currentIndex < items.count {
@@ -27,13 +53,16 @@ class FeedViewModel: ObservableObject {
                     let nextVideoIndex = items[(currentIndex + 1)...].firstIndex(where: { $0.isVideo }) ?? items.count
                     let patchImages = Array(items[(currentIndex + 1)..<nextVideoIndex])
                     
-                    let newPatch = Patch(id: currentPatchId, video: video, images: self.mixAdvToFeedItems(items: patchImages))
                     if(patches.contains(where: {$0.video.url == video.url})){
                         return
                     }
                     if(isPrevData){
+                        let newPatch = Patch(id: 0, video: video, images: self.mixAdvToFeedItems(items: patchImages))
+
                         patches.insert(newPatch, at: 0)
                     }else{
+                        let newPatch = Patch(id: currentPatchId, video: video, images: self.mixAdvToFeedItems(items: patchImages))
+
                         patches.append(newPatch)
                     }
                     
@@ -110,6 +139,7 @@ class FeedViewModel: ObservableObject {
                 self.videoItem = videoItem
                 self.feedItems.append(contentsOf: self.mixAdvToFeedItems(items: imagesItem))
                 self.organizeIntoPatch(newItems)
+                self.setupVideoViewModels()
                 self.isLoadingNextData = false
             }
         }
@@ -148,6 +178,7 @@ class FeedViewModel: ObservableObject {
                 videoItem = videoItems
                 feedItems.insert(contentsOf: mixAdvToFeedItems(items: newItems), at: 0)
                 organizeIntoPatch(newFeedItems,isPrevData: true)
+                self.setupVideoViewModels(isPrevData: true)
             }
             
           
