@@ -12,4 +12,5 @@ struct FeedItem: Identifiable, Codable {
     let isAd: Bool
     let width: Int?
     let height: Int?
+    let price_tags: [PriceTagItem]?
 }
