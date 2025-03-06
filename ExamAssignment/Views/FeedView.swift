@@ -29,7 +29,7 @@ struct FeedView: View {
                 let isLandscape = geometry.size.width > geometry.size.height
                 let videoHeight = isLandscape ? geometry.size.height * 0.92 : geometry.size.height * 0.25
                 if appViewModel.isLandscape {
-                    FeedLandscapeGridView(columns: 2, onLoadMore: {
+                    LazyView(FeedLandscapeGridView(columns: 2, onLoadMore: {
                         Task {
                             await viewModel.loadNextData()
                             
@@ -42,10 +42,22 @@ struct FeedView: View {
                         } else {
                             videoViewModel.play()
                         }
-                    }, videoHeight: videoHeight)
-                    
+                    }, videoHeight: videoHeight), id: "landscape")
                 }else{
-                    createFeedGridView(columns: columns(),sizeHeight: videoHeight).padding()
+                    LazyView(
+                        FeedPotraitGridView(
+                            columns: columns(),
+                            onLoadMore: {
+                                Task {
+                                    await viewModel.loadNextData()
+                                }
+                            },
+                            onRefresh: {
+                                await viewModel.loadPrevData()
+                            },
+                            videoHeight: videoHeight
+                        ).padding(),
+                        id: "potrait")
                 }
             }
             
@@ -59,20 +71,6 @@ struct FeedView: View {
             }
     }
     
-    private func createFeedGridView(columns: Int,sizeHeight:CGFloat? = nil) -> some View {
-        FeedPotraitGridView(
-            columns: columns,
-            onLoadMore: {
-                Task {
-                    await viewModel.loadNextData()
-                }
-            },
-            onRefresh: {
-                await viewModel.loadPrevData()
-            },
-            videoHeight: sizeHeight
-        )
-    }
 }
 
 

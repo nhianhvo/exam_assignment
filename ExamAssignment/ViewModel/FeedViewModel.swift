@@ -14,7 +14,7 @@ class FeedViewModel: ObservableObject {
     
     @Published var isLoadingNextData: Bool = false
     @Published var isReachedEndOfData: Bool = false
-    @Published var patches: [Patch] = []
+    @Published var patches: [PatchItem] = []
     @Published var videoViewModels: [VideoViewModel] = [VideoViewModel()]
     private let itemsPerPatch = 20
     @Published var currentPatchIndex: Int = 0
@@ -25,22 +25,16 @@ class FeedViewModel: ObservableObject {
     }
     
     private func setupVideoViewModels(isPrevData: Bool = false) {
-        print("📱 Setting up VideoViewModels")
-        print("   Patches count:", patches.count)
-        print("   Current ViewModels:", videoViewModels.count)
-        
         while videoViewModels.count < patches.count {
             if(isPrevData){
                 videoViewModels.insert(VideoViewModel(),at: 0)
             }else{
                 videoViewModels.append(VideoViewModel())
             }
-            print("   Added new ViewModel")
         }
         
         if videoViewModels.count > patches.count {
             videoViewModels = Array(videoViewModels.prefix(patches.count))
-            print("   Trimmed ViewModels to", videoViewModels.count)
         }
     }
     
@@ -57,11 +51,11 @@ class FeedViewModel: ObservableObject {
                     return
                 }
                 if(isPrevData){
-                    let newPatch = Patch(id: 0, video: video, images: self.mixAdvToFeedItems(items: patchImages))
+                    let newPatch = PatchItem(id: 0, video: video, images: self.mixAdvToFeedItems(items: patchImages))
                     
                     patches.insert(newPatch, at: 0)
                 }else{
-                    let newPatch = Patch(id: currentPatchId, video: video, images: self.mixAdvToFeedItems(items: patchImages))
+                    let newPatch = PatchItem(id: currentPatchId, video: video, images: self.mixAdvToFeedItems(items: patchImages))
                     
                     patches.append(newPatch)
                 }
@@ -89,6 +83,7 @@ class FeedViewModel: ObservableObject {
     }
     
     func loadNextData() async {
+        print("Run vo loadNextData may lan")
         guard !isLoadingNextData else {
             print("Still loading, skipping...")
             return

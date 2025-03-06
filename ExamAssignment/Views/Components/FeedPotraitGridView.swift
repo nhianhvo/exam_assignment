@@ -49,15 +49,16 @@ private struct ScrollViewReaderContent: View {
     @State private var timer: Timer?
     @State private var lastOffset: CGFloat = 0
     let spacing: CGFloat = 5
+    @State private var lastLoadMoreTime: Date = Date(timeIntervalSince1970: 0)
     
     func getTriggerZone(for index: Int) -> (start: CGFloat, end: CGFloat) {
         switch index {
         case 0:
-            return (CGFloat(0), CGFloat(-200))
+            return (CGFloat(100), CGFloat(-200))
         case 1:
             return (CGFloat(-1550), CGFloat(-2350))
         case 2:
-            return (CGFloat(-3900), CGFloat(-4300))
+            return (CGFloat(-3500), CGFloat(-4300))
         default:
             let start = CGFloat(-4000 - (index - 2) * 800)
             let end = CGFloat(start - 800)
@@ -177,7 +178,10 @@ private struct ScrollViewReaderContent: View {
                     }
                     
                     let threshold: CGFloat = 200
-                    if -offset > UIScreen.main.bounds.height - threshold && !feedViewModel.isLoadingNextData {
+                    let now = Date()
+                    let timeSinceLastLoad = now.timeIntervalSince(lastLoadMoreTime)
+                    if -offset > UIScreen.main.bounds.height - threshold && !feedViewModel.isLoadingNextData && timeSinceLastLoad > 2.0 {
+                        lastLoadMoreTime = now
                         onLoadMore()
                     }
                 }
@@ -196,13 +200,6 @@ private struct ScrollViewReaderContent: View {
                 print("⏸️ Paused video at index", index)
             }
         }
-    }
-}
-
-struct ScrollOffsetPreferenceKey: PreferenceKey {
-    static var defaultValue: CGFloat = 0
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value += nextValue()
     }
 }
 
