@@ -21,10 +21,10 @@ struct FeedLandscapeGridView: View {
     
     var body: some View {
         HStack(spacing: 0) {
-            VideoSectionView(item: feedViewModel.videoItem,videoViewModel: videoViewModel,feedViewModel: feedViewModel)
+            VideoSectionView(item: feedViewModel.videoItem, videoViewModel: videoViewModel, feedViewModel: feedViewModel)
                 .frame(height: videoHeight)
                 .id("Video-\(feedViewModel.videoItem?.id ?? 0)")
-                .padding(EdgeInsets(top: 5, leading: 0, bottom: 10, trailing: 0))
+                .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
             ScrollView {
                 GeometryReader { proxy in
                     Color.clear.preference(
@@ -36,7 +36,7 @@ struct FeedLandscapeGridView: View {
                 
                 MasonryVStack(columns: columns, spacing: 5) {
                     ForEach(feedViewModel.feedItems) { item in
-                        ImageCardView(url: item.url, isAd: item.isAd)
+                        ImageCardView(url: item.url, isAd: item.isAd, preferWidth: CGFloat(item.width ?? 0), preferHeight: CGFloat(item.height ?? 0))
                             .id(item.id)
                     }
                 }
@@ -50,8 +50,6 @@ struct FeedLandscapeGridView: View {
                 videoViewModel.pause()
             }
         }.padding()
-        
-        
         .coordinateSpace(name: "scroll")
         .onPreferenceChange(ScrollOffsetPreferenceKey.self) { offset in
             let oldOffset = scrollOffset

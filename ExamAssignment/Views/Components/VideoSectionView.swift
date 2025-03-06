@@ -23,13 +23,13 @@ struct VideoSectionView: View {
                                 .onDisappear {
                                     videoViewModel.cleanup()
                                 }
-                                .onChange(of: feedViewModel.currentPlayingId) { oldId, newId in
-                                    if newId == item.id {
-                                        videoViewModel.play()
-                                    } else {
-                                        videoViewModel.pause()
-                                    }
-                                }
+//                                .onChange(of: feedViewModel.currentPlayingId) { oldId, newId in
+//                                    if newId == item.id {
+//                                        videoViewModel.play()
+//                                    } else {
+//                                        videoViewModel.pause()
+//                                    }
+//                                }
                     
             }
         }

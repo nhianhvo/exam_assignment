@@ -78,19 +78,14 @@ class FeedViewModel: ObservableObject {
     func loadInitialData() {
         let data = FeedRepository.fetchData()
         var items: [FeedItem] = []
-        videoItem = FeedItem(id: 0, url: data.video, isVideo: true, isAd: false)
-        items.append(FeedItem(id: 0, url: data.video, isVideo: true, isAd: false))
+        videoItem = FeedItem(id: 0, url: data.video, isVideo: true, isAd: false, width: 0, height: 0)
+        items.append(FeedItem(id: 0, url: data.video, isVideo: true, isAd: false, width: 0, height: 0))
         let images = data.images.map {
-            FeedItem(id: $0.id, url: $0.url, isVideo: false, isAd: false)
+            FeedItem(id: $0.id, url: $0.url, isVideo: false, isAd: false, width: $0.width, height: $0.height)
         }
         items.append(contentsOf: images)
         feedItems = mixAdvToFeedItems(items: images)
         self.organizeIntoPatch(items)
-        
-//        // Loop through the URLs and fetch dimensions
-//        for url in imageUrls {
-//            fetchImageSize(from: url)
-//        }
     }
     
     func loadNextData() async {
@@ -99,28 +94,6 @@ class FeedViewModel: ObservableObject {
             return
         }
        
-//        await MainActor.run { isLoadingNextData = true }
-//       
-//        if let fromIndex = feedItems.last?.id, let data = FeedRepository.fetchNewData(fromIndex: fromIndex){
-//            
-//            let newItems = data.images.map {
-//                FeedItem(id: $0.id, url: $0.url, isVideo: false, isAd: false)
-//            }
-//
-//            try? await Task.sleep(nanoseconds: 1_000_000_000) // 1 second
-//                        
-//                await MainActor.run {
-////                    self.videoItem = FeedItem(id: 0, url: data.video, isVideo: true, isAd: false)
-//                    
-//                    self.feedItems.append(FeedItem(id: 0, url: data.video, isVideo: true, isAd: false))
-//                    self.feedItems.append(contentsOf: self.mixAdvToFeedItems(items: newItems))
-//                    
-//                    organizeIntoPatch(mixAdvToFeedItems(items: newItems))
-//                    self.isLoadingNextData = false
-//                }
-//        }
-        
-                
         guard let lastPatch = patches.last else {
                 await MainActor.run {
                     self.isLoadingNextData = false
@@ -132,9 +105,9 @@ class FeedViewModel: ObservableObject {
         let lastItemId = lastPatch.images.last?.id ?? lastPatch.video.id
         
         if let data = FeedRepository.fetchNewData(fromIndex: lastItemId){
-            let videoItem = FeedItem(id: lastItemId + 1, url: data.video,isVideo: true,isAd: false)
+            let videoItem = FeedItem(id: lastItemId + 1, url: data.video,isVideo: true, isAd: false, width: 0, height: 0)
             let imagesItem = data.images.map {
-                FeedItem(id: $0.id, url:  $0.url, isVideo: false, isAd: false)
+                FeedItem(id: $0.id, url:  $0.url, isVideo: false, isAd: false, width: $0.width, height: $0.height)
             }
             try? await Task.sleep(nanoseconds: 1_000_000_000)
             await MainActor.run {
@@ -159,7 +132,6 @@ class FeedViewModel: ObservableObject {
     }
     
     func loadPrevData() async {
-        
         guard let firstPatch = patches.first else {
                 await MainActor.run {
                     self.isLoadingNextData = false
@@ -169,20 +141,16 @@ class FeedViewModel: ObservableObject {
             }
         
         if let fromIndex = firstPatch.images.first?.id, let data = FeedRepository.fetchOldData(fromIndex: fromIndex){
-            let videoItems = FeedItem(id: 0, url: data.video, isVideo: true, isAd: false)
-            
+            let videoItems = FeedItem(id: 0, url: data.video, isVideo: true, isAd: false, width: 0, height: 0)
             let newItems = data.images.map {
-                FeedItem(id: $0.id, url: $0.url, isVideo: false, isAd: false)
+                FeedItem(id: $0.id, url: $0.url, isVideo: false, isAd: false, width: $0.width, height: $0.height)
             }
             
             let newFeedItems: [FeedItem] = [videoItems] + newItems
-            
-           
-            
             await MainActor.run {
                 videoItem = videoItems
                 feedItems.insert(contentsOf: mixAdvToFeedItems(items: newItems), at: 0)
-                organizeIntoPatch(newFeedItems,isPrevData: true)
+                organizeIntoPatch(newFeedItems, isPrevData: true)
                 self.setupVideoViewModels(isPrevData: true)
             }
             
@@ -199,58 +167,10 @@ class FeedViewModel: ObservableObject {
             let fibonacciIndices = Utils.getFibonacciArray(count: items.count)
             for index in fibonacciIndices where index < items.count {
                 if let ad = advData.ads.randomElement() {
-                    result.insert(FeedItem(id: ad.id, url: ad.url, isVideo: false, isAd: true), at: index)
+                    result.insert(FeedItem(id: ad.id, url: ad.url, isVideo: false, isAd: true, width: ad.width, height:ad.height), at: index)
                 }
             }
         }
         return result
     }
-    
-    let imageUrls = [
-
-            "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&q=80&w=1080",
-        "https://images.unsplash.com/photo-1516676158449-f9db75b6e3d?ixlib=rb-4.0.3&q=80&w=1080",
-            "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3&q=80&w=1080",
-            "https://images.unsplash.com/photo-1502630859934-b3b41d18206c?ixlib=rb-4.0.3&q=80&w=1080",
-           "https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-4.0.3&q=80&w=1080",
-            "https://images.unsplash.com/photo-1530099486328-e021101a494a?ixlib=rb-4.0.3&q=80&w=1080",
-            "https://images.unsplash.com/photo-1494548162494-384bba4ab999?ixlib=rb-4.0.3&q=80&w=1080",
-            "https://images.unsplash.com/photo-1519996456112-9f80e4e421f8?ixlib=rb-4.0.3&q=80&w=1080",
-            "https://images.unsplash.com/photo-1524758631624-e2822e304c36?ixlib=rb-4.0.3&q=80&w=1080",
-            "https://images.unsplash.com/photo-1517760444937-f6397edcbbcd?ixlib=rb-4.0.3&q=80&w=1080",
-            "https://images.unsplash.com/photo-1496096265110-f83ad7f96608?ixlib=rb-4.0.3&q=80&w=1080",
-            "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?ixlib=rb-4.0.3&q=80&w=1080",
-            "https://images.unsplash.com/photo-1516534775068-ba3e457a69ea?ixlib=rb-4.0.3&q=80&w=1080",
-            "https://images.unsplash.com/photo-1517456837842-2944a41879b2?ixlib=rb-4.0.3&q=80&w=1080",
-            "https://images.unsplash.com/photo-1518495973542-4542c06a5843?ixlib=rb-4.0.3&q=80&w=1080",
-            "https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?ixlib=rb-4.0.3&q=80&w=1080",
-            "https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b?ixlib=rb-4.0.3&q=80&w=1080",
-            "https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&q=80&w=1080",
-            "https://images.unsplash.com/photo-1513703207085-1a9f2e0e8b4b?ixlib=rb-4.0.3&q=80&w=1080",
-            "https://images.unsplash.com/photo-1518623489648-a173ef7824f3?ixlib=rb-4.0.3&q=80&w=1080"
-    ]
-
-    func fetchImageSize(from url: String) {
-        guard let imageURL = URL(string: url) else {
-            print("Invalid URL: \(url)")
-            return
-        }
-        
-        let task = URLSession.shared.dataTask(with: imageURL) { data, response, error in
-            if let error = error {
-                print("Error fetching image: \(error.localizedDescription)")
-                return
-            }
-            
-            if let data = data, let image = UIImage(data: data) {
-                print("Image URL: \(url)")
-                print("Width: \(image.size.width) pixels")
-                print("Height: \(image.size.height) pixels")
-                print("--------------------------------")
-            }
-        }
-        task.resume()
-    }
-    
-   
 }

@@ -10,4 +10,6 @@ struct FeedItem: Identifiable, Codable {
     let url: String
     let isVideo: Bool
     let isAd: Bool
+    let width: Int?
+    let height: Int?
 }

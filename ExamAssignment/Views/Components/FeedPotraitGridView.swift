@@ -83,7 +83,6 @@ private struct ScrollViewReaderContent: View {
                     )
                 }
                 .frame(height: 0)
-                
                 ForEach(Array(feedViewModel.patches.enumerated()), id: \.element.id) { index, patch in
                                 VStack(spacing: 0) {
                                     VideoSectionView(item: patch.video,videoViewModel: feedViewModel.videoViewModels[index],feedViewModel: feedViewModel)
@@ -98,10 +97,11 @@ private struct ScrollViewReaderContent: View {
                                                                     })
                                     
                                     MasonryVStack(columns: columns, spacing: 5) {
-                                        ForEach(patch.images) { item in
-                                            ImageCardView(url: item.url, isAd: item.isAd)
-                                                .id(item.id)
-                                        }
+                                            ForEach(patch.images) { item in
+                                                ImageCardView(url: item.url, isAd: item.isAd, preferWidth: CGFloat(item.width ?? 0), preferHeight: CGFloat(item.height ?? 0))
+                                                    .id(item.id)
+                                            }
+                                        
                                     }
                                 }
                             }
@@ -132,70 +132,70 @@ private struct ScrollViewReaderContent: View {
                         }
                 )
             .coordinateSpace(name: "scroll")
-            .onChange(of: scrollOffset) { oldValue, newValue in
-                print("\n📜 Scroll Offset:", newValue)
-                let scrollDirection = newValue - oldValue
-                print("↕️ Scroll Direction:", scrollDirection)
-                
-                if let currentIndex = getCurrentIndex(from: newValue) {
-                        self.currentVideoIndex = currentIndex
-                        print("📍 Current Index:", currentIndex)
-                        let patch = feedViewModel.patches[currentIndex]
-                        feedViewModel.setCurrentPlaying(patch.video.id)
-                        
-                        let zone = getTriggerZone(for: currentIndex)
-                        print("🎯 Current zone:", zone.start, "to", zone.end)
-                    print("isDragging: \(isDragging)")
-                        if newValue < zone.start && newValue > zone.end && !isDragging {
-                            print("Co vo day khong")
-                            let currentTime = Date()
-                            let timeSinceLastScroll = currentTime.timeIntervalSince(lastScrollTime)
-                            
-                            if timeSinceLastScroll > 0.03 && !isAutoScrolling {
-                                print("\n✨ TRIGGER AUTO SCROLL")
-                                isAutoScrolling = true
-                                
-                                print("IN target Index: \(currentIndex)")
-                                let targetPatch = feedViewModel.patches[currentIndex]
-                                print("🎬 Scrolling to Video-\(targetPatch.id)")
-                                
-                                withAnimation(.easeOut(duration: 0.3)) {
-                                    scrollProxy.scrollTo("Video-\(targetPatch.id)", anchor: .top)
-                                }
-                                
-                                
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                    checkPlayOrPauseVideo(currentIndex: currentIndex)
-                                    isAutoScrolling = false
-                                }
-                            }
-                        }
-                }
-                
-
-                
-                lastScrollTime = Date()
-            }
+//            .onChange(of: scrollOffset) { oldValue, newValue in
+//                print("\n📜 Scroll Offset:", newValue)
+//                let scrollDirection = newValue - oldValue
+////                print("↕️ Scroll Direction:", scrollDirection)
+//                
+//                if let currentIndex = getCurrentIndex(from: newValue) {
+//                        self.currentVideoIndex = currentIndex
+//                        print("📍 Current Index:", currentIndex)
+//                        let patch = feedViewModel.patches[currentIndex]
+//                        feedViewModel.setCurrentPlaying(patch.video.id)
+//                        
+//                        let zone = getTriggerZone(for: currentIndex)
+//                        print("🎯 Current zone:", zone.start, "to", zone.end)
+//                    print("isDragging: \(isDragging)")
+//                        if newValue < zone.start && newValue > zone.end && !isDragging {
+//                            print("Co vo day khong")
+//                            let currentTime = Date()
+//                            let timeSinceLastScroll = currentTime.timeIntervalSince(lastScrollTime)
+//                            
+//                            if timeSinceLastScroll > 0.03 && !isAutoScrolling {
+//                                print("\n✨ TRIGGER AUTO SCROLL")
+//                                isAutoScrolling = true
+//                                
+//                                print("IN target Index: \(currentIndex)")
+//                                let targetPatch = feedViewModel.patches[currentIndex]
+//                                print("🎬 Scrolling to Video-\(targetPatch.id)")
+//                                
+//                                withAnimation(.easeOut(duration: 0.3)) {
+//                                    scrollProxy.scrollTo("Video-\(targetPatch.id)", anchor: .top)
+//                                }
+//                                
+//                                
+//                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+//                                    checkPlayOrPauseVideo(currentIndex: currentIndex)
+//                                    isAutoScrolling = false
+//                                }
+//                            }
+//                        }
+//                }
+//                
+//
+//                
+//                lastScrollTime = Date()
+//            }
             .onPreferenceChange(ScrollOffsetPreferenceKey.self) { offset in
-                let oldOffset = scrollOffset
-                scrollOffset = offset
-                
-                let isCurrentlyScrolling = abs(oldOffset - offset) > 1
-                
-                if isCurrentlyScrolling != isScrolling {
-                    isScrolling = isCurrentlyScrolling
-                    if !isScrolling {
-                        print("playing: \(currentVideoIndex)")
-                        checkPlayOrPauseVideo(currentIndex: currentVideoIndex)
-                    }else{
-                        feedViewModel.videoViewModels.forEach { $0.pause() }
-                    }
-                }
-                
-                let threshold: CGFloat = 200
-                if -offset > UIScreen.main.bounds.height - threshold && !feedViewModel.isLoadingNextData {
-                    onLoadMore()
-                }
+//                let oldOffset = scrollOffset
+//                scrollOffset = offset
+//                
+//                let isCurrentlyScrolling = abs(oldOffset - offset) > 1
+//                
+//                if isCurrentlyScrolling != isScrolling {
+//                    isScrolling = isCurrentlyScrolling
+//                    if !isScrolling {
+//                        print("playing: \(currentVideoIndex)")
+//                        checkPlayOrPauseVideo(currentIndex: currentVideoIndex)
+//                    }else{
+//                        feedViewModel.videoViewModels.forEach { $0.pause() }
+//                    }
+//                }
+//                
+//                let threshold: CGFloat = 200
+//                if -offset > UIScreen.main.bounds.height - threshold && !feedViewModel.isLoadingNextData {
+//                    onLoadMore()
+//                }
             }
             
         }

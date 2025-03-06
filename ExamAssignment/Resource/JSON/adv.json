@@ -1,13 +1,13 @@
 {
   "ads": [
-    {"id": 0, "url": "https://images.unsplash.com/photo-1540655037529-dec987208707?q=80&w=2421?ixlib=rb-4.0.3&q=80&w=1080"},
-    {"id": 1, "url": "https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=2359?ixlib=rb-4.0.3&q=80&w=1080"},
-    {"id": 2, "url": "https://images.unsplash.com/photo-1536273513130-d8477e6e4389?q=80&w=2342&q=80&w=1080"},
-    {"id": 3, "url": "https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-4.0.3&q=80&w=1080"},
-    {"id": 4, "url": "https://plus.unsplash.com/premium_photo-1679079456083-9f288e224e96?q=80&w=2340&q=80&w=1080"},
-    {"id": 5, "url": "https://images.unsplash.com/photo-1557463008-9e9f17d00bd5?q=80&w=2340?q=80&w=2340&q=80&w=1080"},
-    {"id": 6, "url": "https://images.unsplash.com/photo-1740738174801-12a109f9acd3?q=80&w=2514?q=80&w=2340&q=80&w=1080"},
-    {"id": 7, "url": "https://plus.unsplash.com/photo-1726607424598-139ff3391ce8?q=80&w=2340?q=80&w=2340&q=80&w=1080"},
-    {"id": 8, "url": "https://plus.unsplash.com/premium_photo-1734543932038-6bb3d024f5a0?q=80&w=2340&q=80&w=1080"},
+    {"id": 0, "url": "https://images.unsplash.com/photo-1540655037529-dec987208707?q=80&w=1080", "width": 1080, "height": 681},
+    {"id": 1, "url": "https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=1080", "width": 1080, "height": 730},
+    {"id": 2, "url": "https://images.unsplash.com/photo-1536273513130-d8477e6e4389?q=80&w=1080", "width": 1080, "height": 720},
+    {"id": 3, "url": "https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1080", "width": 1080, "height": 721},
+    {"id": 4, "url": "https://plus.unsplash.com/premium_photo-1679079456083-9f288e224e96?q=80&w=1080", "width": 1080, "height": 721},
+    {"id": 5, "url": "https://images.unsplash.com/photo-1557463008-9e9f17d00bd5?q=80&w=1080", "width": 1080, "height": 0},
+    {"id": 6, "url": "https://images.unsplash.com/photo-1740738174801-12a109f9acd3?q=80&w=1080", "width": 1080, "height": 1514},
+    {"id": 7, "url": "https://plus.unsplash.com/photo-1726607424598-139ff3391ce8?q=80&w=1080", "width": 1080, "height": 720},
+    {"id": 8, "url": "https://plus.unsplash.com/premium_photo-1734543932038-6bb3d024f5a0?q=80&w=1080", "width": 1080, "height": 720},
   ]
 }

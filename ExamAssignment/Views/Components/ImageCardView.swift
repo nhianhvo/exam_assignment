@@ -10,6 +10,9 @@ import SwiftUI
 struct ImageCardView: View {
     let url: String
     let isAd: Bool
+    let preferWidth: CGFloat?
+    let preferHeight: CGFloat?
+//    let targetWidth: CGFloat?
     @State private var showTag = false
     @State private var tagPosition: (x: CGFloat, y: CGFloat)? = nil
     @State private var tagPrice: String? = nil
@@ -79,16 +82,23 @@ struct ImageCardView: View {
     
 
     private var loadingView: some View {
-        ZStack {
+        
+        GeometryReader { geometry in
+            var targetHeight: CGFloat = 50
+            let targetWidth = geometry.size.width
+            if let preferWidth = preferWidth{
+                targetHeight = targetWidth*(preferHeight ?? 0)/preferWidth
+            }
+            return ZStack {
                 Rectangle()
                     .fill(Color.gray.opacity(0.3))
                     .cornerRadius(10)
-                
+                    .frame(width: targetWidth, height: targetHeight)
                 ProgressView()
                     .tint(.gray)
             }
         }
-        
+        }
     private var failureView: some View {
         ZStack {
                 Rectangle()
