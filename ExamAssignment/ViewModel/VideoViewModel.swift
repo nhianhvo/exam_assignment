@@ -20,11 +20,11 @@ class VideoViewModel: ObservableObject {
         
         if player != nil,let savedTime = lastPlaybackTime {
             print("🎥 Restoring player state")
-                        player?.seek(to: savedTime) { [weak self] finished in
-                            if finished, self?.wasPlaying == true {
-                                self?.player?.play()
-                            }
-                        }
+            player?.seek(to: savedTime) { [weak self] finished in
+                if finished, self?.wasPlaying == true {
+                    self?.player?.play()
+                }
+            }
             return
         }
         

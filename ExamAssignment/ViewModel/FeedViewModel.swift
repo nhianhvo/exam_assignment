@@ -25,55 +25,55 @@ class FeedViewModel: ObservableObject {
     }
     
     private func setupVideoViewModels(isPrevData: Bool = false) {
-            print("📱 Setting up VideoViewModels")
-            print("   Patches count:", patches.count)
-            print("   Current ViewModels:", videoViewModels.count)
-            
-            while videoViewModels.count < patches.count {
-                if(isPrevData){
-                    videoViewModels.insert(VideoViewModel(),at: 0)
-                }else{
-                    videoViewModels.append(VideoViewModel())
-                }
-                print("   Added new ViewModel")
+        print("📱 Setting up VideoViewModels")
+        print("   Patches count:", patches.count)
+        print("   Current ViewModels:", videoViewModels.count)
+        
+        while videoViewModels.count < patches.count {
+            if(isPrevData){
+                videoViewModels.insert(VideoViewModel(),at: 0)
+            }else{
+                videoViewModels.append(VideoViewModel())
             }
-            
-            if videoViewModels.count > patches.count {
-                videoViewModels = Array(videoViewModels.prefix(patches.count))
-                print("   Trimmed ViewModels to", videoViewModels.count)
-            }
+            print("   Added new ViewModel")
         }
+        
+        if videoViewModels.count > patches.count {
+            videoViewModels = Array(videoViewModels.prefix(patches.count))
+            print("   Trimmed ViewModels to", videoViewModels.count)
+        }
+    }
     
     private func organizeIntoPatch(_ items: [FeedItem], isPrevData: Bool = false) {
-            var currentPatchId = patches.count + 1
-            var currentIndex = 0
-            
-            while currentIndex < items.count {
-                if let video = items[currentIndex...].first(where: { $0.isVideo }) {
-                    let nextVideoIndex = items[(currentIndex + 1)...].firstIndex(where: { $0.isVideo }) ?? items.count
-                    let patchImages = Array(items[(currentIndex + 1)..<nextVideoIndex])
-                    
-                    if(patches.contains(where: {$0.video.url == video.url})){
-                        return
-                    }
-                    if(isPrevData){
-                        let newPatch = Patch(id: 0, video: video, images: self.mixAdvToFeedItems(items: patchImages))
-
-                        patches.insert(newPatch, at: 0)
-                    }else{
-                        let newPatch = Patch(id: currentPatchId, video: video, images: self.mixAdvToFeedItems(items: patchImages))
-
-                        patches.append(newPatch)
-                    }
-                    
-                    currentPatchId += 1
-                    currentIndex = patchImages.count - 1 
-                } else {
-                    break
+        var currentPatchId = patches.count + 1
+        var currentIndex = 0
+        
+        while currentIndex < items.count {
+            if let video = items[currentIndex...].first(where: { $0.isVideo }) {
+                let nextVideoIndex = items[(currentIndex + 1)...].firstIndex(where: { $0.isVideo }) ?? items.count
+                let patchImages = Array(items[(currentIndex + 1)..<nextVideoIndex])
+                
+                if(patches.contains(where: {$0.video.url == video.url})){
+                    return
                 }
-                print("patch count: \(patches.count)")
+                if(isPrevData){
+                    let newPatch = Patch(id: 0, video: video, images: self.mixAdvToFeedItems(items: patchImages))
+                    
+                    patches.insert(newPatch, at: 0)
+                }else{
+                    let newPatch = Patch(id: currentPatchId, video: video, images: self.mixAdvToFeedItems(items: patchImages))
+                    
+                    patches.append(newPatch)
+                }
+                
+                currentPatchId += 1
+                currentIndex = patchImages.count - 1
+            } else {
+                break
             }
+            print("patch count: \(patches.count)")
         }
+    }
     
     func loadInitialData() {
         let data = FeedRepository.fetchData()
@@ -93,14 +93,14 @@ class FeedViewModel: ObservableObject {
             print("Still loading, skipping...")
             return
         }
-       
+        
         guard let lastPatch = patches.last else {
-                await MainActor.run {
-                    self.isLoadingNextData = false
-                    self.isReachedEndOfData = true
-                }
-                return
+            await MainActor.run {
+                self.isLoadingNextData = false
+                self.isReachedEndOfData = true
             }
+            return
+        }
         
         let lastItemId = lastPatch.images.last?.id ?? lastPatch.video.id
         
@@ -133,12 +133,12 @@ class FeedViewModel: ObservableObject {
     
     func loadPrevData() async {
         guard let firstPatch = patches.first else {
-                await MainActor.run {
-                    self.isLoadingNextData = false
-                    self.isReachedEndOfData = true
-                }
-                return
+            await MainActor.run {
+                self.isLoadingNextData = false
+                self.isReachedEndOfData = true
             }
+            return
+        }
         
         if let fromIndex = firstPatch.images.first?.id, let data = FeedRepository.fetchOldData(fromIndex: fromIndex){
             let videoItems = FeedItem(id: 0, url: data.video, isVideo: true, isAd: false, width: 0, height: 0, price_tags: nil)
@@ -153,8 +153,6 @@ class FeedViewModel: ObservableObject {
                 organizeIntoPatch(newFeedItems, isPrevData: true)
                 self.setupVideoViewModels(isPrevData: true)
             }
-            
-          
         }else{
             //Has no old data
             return

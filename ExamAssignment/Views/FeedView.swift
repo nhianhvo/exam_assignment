@@ -32,7 +32,7 @@ struct FeedView: View {
                     FeedLandscapeGridView(columns: 2, onLoadMore: {
                         Task {
                             await viewModel.loadNextData()
-                          
+                            
                         }
                     }, onRefresh: {
                         await viewModel.loadPrevData()
@@ -51,29 +51,28 @@ struct FeedView: View {
             
             
         }.navigationTitle("Examination")
-         .navigationBarTitleDisplayMode(.inline)
-         .ignoresSafeArea(.keyboard)
-         .environmentObject(viewModel)
-        .onAppear {
-            viewModel.loadInitialData()
-        }
+            .navigationBarTitleDisplayMode(.inline)
+            .ignoresSafeArea(.keyboard)
+            .environmentObject(viewModel)
+            .onAppear {
+                viewModel.loadInitialData()
+            }
     }
     
     private func createFeedGridView(columns: Int,sizeHeight:CGFloat? = nil) -> some View {
         FeedPotraitGridView(
-                columns: columns,
-                onLoadMore: {
-                    Task {
-                        await viewModel.loadNextData()
-                      
-                    }
-                },
-                onRefresh: {
-                    await viewModel.loadPrevData()
-                },
-                videoHeight: sizeHeight
-            )
-        }
+            columns: columns,
+            onLoadMore: {
+                Task {
+                    await viewModel.loadNextData()
+                }
+            },
+            onRefresh: {
+                await viewModel.loadPrevData()
+            },
+            videoHeight: sizeHeight
+        )
+    }
 }
 
 

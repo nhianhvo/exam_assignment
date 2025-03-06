@@ -17,22 +17,22 @@ class AppViewModel: ObservableObject {
         let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
         self.isLandscape = windowScene?.interfaceOrientation.isLandscape ?? false
         orientationObserver = NotificationCenter.default.addObserver(
-                            forName: UIDevice.orientationDidChangeNotification,
-                            object: nil,
-                            queue: .main
-                        ) { [weak self] _ in
-                            guard let self = self else { return }
-                            let newIsLandscape = UIDevice.current.orientation.isLandscape
-                            if self.isLandscape != newIsLandscape {
-                                self.isLandscape = newIsLandscape
-                            }
-                        }
+            forName: UIDevice.orientationDidChangeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            guard let self = self else { return }
+            let newIsLandscape = UIDevice.current.orientation.isLandscape
+            if self.isLandscape != newIsLandscape {
+                self.isLandscape = newIsLandscape
+            }
+        }
     }
     deinit {
-                if let observer = orientationObserver {
-                    NotificationCenter.default.removeObserver(observer)
-                }
-            }
+        if let observer = orientationObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
+    }
 }
-    
+
 
