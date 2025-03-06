@@ -29,10 +29,71 @@ struct ImageCardView: View {
                         .cornerRadius(10)
                         .overlay(
                             GeometryReader { geometry in
-                                Color.clear
-                                    .onAppear {
-                                        loadTags(geometry.size)
+                                ZStack {
+                                    Color.clear
+                                        .onAppear {
+                                            loadTags(geometry.size)
+                                        }
+                                    
+                                    if let (x, y) = tagPosition, !isAd {
+                                        ZStack {
+                                            Circle()
+                                                .frame(width: 20, height: 20)
+                                                .foregroundColor(.blue)
+                                                .position(x: x, y: y)
+                                                .onTapGesture {
+                                                    withAnimation(.easeInOut(duration: 0.3)) {
+                                                        showTag.toggle()
+                                                    }
+                                                }
+                                            Circle()
+                                                .frame(width: 16, height: 16)
+                                                .foregroundColor(.white)
+                                                .position(x: x, y: y)
+                                                .onTapGesture {
+                                                    withAnimation(.easeInOut(duration: 0.3)) {
+                                                        showTag.toggle()
+                                                    }
+                                                }
+                                            Circle()
+                                                .frame(width: 7, height: 7)
+                                                .foregroundColor(.blue)
+                                                .position(x: x, y: y)
+                                                .onTapGesture {
+                                                    withAnimation(.easeInOut(duration: 0.3)) {
+                                                        showTag.toggle()
+                                                    }
+                                                }
+                                        }
+                                        if showTag, let price = tagPrice {
+                                                let tagHeight: CGFloat = 40
+                                                let tagWidth: CGFloat = 100
+                                                
+                                                let isTopHalf = y < geometry.size.height / 2
+                                                let spacing: CGFloat = isTopHalf ? 10 : 5
+                                                
+                                                let priceY = isTopHalf ?
+                                                    min(y + tagHeight/2 + spacing, geometry.size.height - tagHeight/2) :
+                                                    max(y - tagHeight/2 - spacing, tagHeight/2)
+                                                
+                                                let priceX = max(tagWidth/2, min(x, geometry.size.width - tagWidth/2))
+                                                
+                                                VStack {
+                                                    Text(price)
+                                                        .font(.subheadline)
+                                                        .padding(8)
+                                                        .background(Color.white)
+                                                        .cornerRadius(5)
+                                                        .shadow(radius: 2)
+                                                }
+                                                .position(x: priceX, y: priceY)
+                                                .transition(.opacity)
+                                            }
                                     }
+                                    
+                                    
+                                }
+                                
                             }
                         )
                 case .failure:
@@ -43,40 +104,16 @@ struct ImageCardView: View {
                     unknownView
                 }
             }
-            
-            //            if let (x, y) = tagPosition, !isAd {
-            //                Circle()
-            //                    .frame(width: 10, height: 10)
-            //                    .foregroundColor(.blue)
-            //                    .position(x: x, y: y)
-            //                    .onTapGesture {
-            //                        withAnimation(.easeInOut(duration: 0.3)) {
-            //                            showTag.toggle()
-            //                        }
-            //                    }
-            //            }
-            
-            if showTag, let price = tagPrice, !isAd {
-                VStack {
-                    Text(price)
-                        .font(.subheadline)
-                        .padding(8)
-                        .background(Color.white)
-                        .cornerRadius(5)
-                        .shadow(radius: 2)
-                }
-                .position(x: tagPosition?.x ?? 0, y: (tagPosition?.y ?? 0) + 20)
-                .transition(.opacity)
-            }
         }
         .overlay(
+            
             isAd ? Text("Ad").font(.caption).foregroundColor(.white).padding(5).background(Color.black.opacity(0.7)).cornerRadius(5) : nil,
             alignment: .topLeading
         )
     }
     
     private func loadTags(_ size: CGSize) {
-        tagPosition = (size.width * 0.5, size.height * 0.5)
+        tagPosition = (size.width * 0.1, size.height * 0.2)
         tagPrice = "$99.99"
     }
     
