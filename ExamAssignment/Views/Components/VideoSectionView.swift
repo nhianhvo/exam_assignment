@@ -8,8 +8,8 @@ import SwiftUI
 
 struct VideoSectionView: View {
     let item: FeedItem?
-    @StateObject private var videoViewModel = VideoViewModel()
-    @EnvironmentObject private var coordinator: PlayerCoordinator
+    @ObservedObject var videoViewModel: VideoViewModel
+    @ObservedObject var feedViewModel: FeedViewModel
     var body: some View {
         Group {
             if let item = item, item.isVideo {
@@ -17,20 +17,13 @@ struct VideoSectionView: View {
                     .frame(maxWidth: .infinity)
                     .cornerRadius(10)
                     .onAppear {
-                                    videoViewModel.setupPlayer(with: item.url)
-                                    coordinator.setCurrentPlaying(item.id)
-                                }
-                                .onDisappear {
-                                    videoViewModel.cleanup()
-                                }
-                                .onChange(of: coordinator.currentPlayingId) { oldId, newId in
-                                    if newId == item.id {
-                                        videoViewModel.play()
-                                    } else {
-                                        videoViewModel.pause()
-                                    }
-                                }
-                    
+                        videoViewModel.setupPlayer(with: item.url)
+                        feedViewModel.setCurrentPlaying(item.id)
+                    }
+                    .onDisappear {
+                        videoViewModel.cleanup()
+                    }
+                
             }
         }
     }

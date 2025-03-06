@@ -15,7 +15,7 @@ struct VideoView: View {
     
     var body: some View {
         VideoPlayer(player: viewModel.player).id("\(id)-\(url)")
-            
+        
         
     }
 }

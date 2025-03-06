@@ -15,10 +15,14 @@ actor ImageCache {
     }()
     
     func image(for url: String) -> UIImage? {
-        cache.object(forKey: url as NSString)
+        print("🔍 Checking cache for: \(url)")
+        let cachedImage = cache.object(forKey: url as NSString)
+        print("📦 Cache hit: \(cachedImage != nil)")
+        return cachedImage
     }
     
     func insert(_ image: UIImage, for url: String) {
+        print("💾 Inserting into cache: \(url)")
         cache.setObject(image, forKey: url as NSString)
     }
 }
@@ -54,12 +58,38 @@ struct CachedAsyncImage<Content: View>: View {
         }
         
         do {
-            let (data, _) = try await URLSession.shared.data(from: url)
+            let urlSession = URLSession.shared
+            let urlRequest = URLRequest(url: url, cachePolicy: .returnCacheDataElseLoad, timeoutInterval: 30)
+            
+            let (data, response) = try await urlSession.data(for: urlRequest)
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw URLError(.badServerResponse)
+            }
+            
+            guard (200...299).contains(httpResponse.statusCode) else {
+                throw URLError(.badServerResponse)
+            }
+            
+            if let mimeType = httpResponse.mimeType {
+                guard mimeType.hasPrefix("image/") else {
+                    throw URLError(.unsupportedURL)
+                }
+            }
             
             if let image = UIImage(data: data) {
                 await ImageCache.shared.insert(image, for: url.absoluteString)
                 phase = .success(Image(uiImage: image))
             } else {
+                let options: [NSData.ReadingOptions] = [.mappedIfSafe, .uncached]
+                for option in options {
+                    if let image = UIImage(data: data, scale: UIScreen.main.scale) {
+                        await ImageCache.shared.insert(image, for: url.absoluteString)
+                        phase = .success(Image(uiImage: image))
+                        return
+                    }
+                }
+                
                 phase = .failure(URLError(.cannotDecodeContentData))
             }
         } catch {

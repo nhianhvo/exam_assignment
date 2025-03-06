@@ -10,4 +10,5 @@ struct ImageItem: Codable {
     let url: String
     let width: Int?
     let height: Int?
+    let price_tags: [PriceTagItem]?
 }

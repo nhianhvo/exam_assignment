@@ -32,7 +32,6 @@ class VideoViewModel: ObservableObject {
         playerItem = AVPlayerItem(asset: asset)
         player = AVPlayer(playerItem: playerItem)
         
-        // Thêm observer để lưu thời điểm hiện tại
         timeObserver = player?.addPeriodicTimeObserver(
             forInterval: CMTime(seconds: 0.5, preferredTimescale: CMTimeScale(NSEC_PER_SEC)),
             queue: .main
