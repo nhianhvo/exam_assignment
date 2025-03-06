@@ -119,6 +119,7 @@ class FeedViewModel: ObservableObject {
                 self.organizeIntoPatch(newItems)
                 self.setupVideoViewModels()
                 self.isLoadingNextData = false
+                self.isReachedEndOfData = true
             }
         }
         else{
