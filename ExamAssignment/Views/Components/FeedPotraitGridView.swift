@@ -79,6 +79,13 @@ private struct ScrollViewReaderContent: View {
         GeometryReader { geometry in
             ScrollViewReader { scrollProxy in
                 ScrollView {
+                    GeometryReader { proxy in
+                        Color.clear.preference(
+                            key: ScrollOffsetPreferenceKey.self,
+                            value: proxy.frame(in: .named("scroll")).minY
+                        )
+                    }
+                    .frame(height: 0)
                     ForEach(Array(feedViewModel.patches.enumerated()), id: \.element.id) { index, patch in
                         VStack(spacing: spacing) {
                             VideoSectionView(item: patch.video,videoViewModel: feedViewModel.videoViewModels[index],feedViewModel: feedViewModel)
