@@ -55,9 +55,9 @@ private struct ScrollViewReaderContent: View {
         case 1:
             return (CGFloat(-1550), CGFloat(-2350))
         case 2:
-            return (CGFloat(-3500), CGFloat(-4300))
+            return (CGFloat(-3900), CGFloat(-4300))
         default:
-            let start = CGFloat(-3500 - (index - 2) * 800)
+            let start = CGFloat(-4000 - (index - 2) * 800)
             let end = CGFloat(start - 800)
             return (start, end)
         }
@@ -134,31 +134,20 @@ private struct ScrollViewReaderContent: View {
                 )
                 .coordinateSpace(name: "scroll")
                 .onChange(of: scrollOffset) { oldValue, newValue in
-                    print("\n📜 Scroll Offset:", newValue)
-                    let scrollDirection = newValue - oldValue
-                    //                print("↕️ Scroll Direction:", scrollDirection)
                     
                     if let currentIndex = getCurrentIndex(from: newValue) {
                         self.currentVideoIndex = currentIndex
-                        print("📍 Current Index:", currentIndex)
                         let patch = feedViewModel.patches[currentIndex]
                         feedViewModel.setCurrentPlaying(patch.video.id)
                         
                         let zone = getTriggerZone(for: currentIndex)
-                        print("🎯 Current zone:", zone.start, "to", zone.end)
-                        print("isDragging: \(isDragging)")
                         if newValue < zone.start && newValue > zone.end && !isDragging {
-                            print("Co vo day khong")
                             let currentTime = Date()
                             let timeSinceLastScroll = currentTime.timeIntervalSince(lastScrollTime)
                             
                             if timeSinceLastScroll > 0.03 && !isAutoScrolling {
-                                print("\n✨ TRIGGER AUTO SCROLL")
                                 isAutoScrolling = true
-                                
-                                print("IN target Index: \(currentIndex)")
                                 let targetPatch = feedViewModel.patches[currentIndex]
-                                print("🎬 Scrolling to Video-\(targetPatch.id)")
                                 
                                 withAnimation(.easeOut(duration: 0.3)) {
                                     scrollProxy.scrollTo("Video-\(targetPatch.id)", anchor: .top)
