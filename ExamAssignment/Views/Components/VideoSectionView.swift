@@ -17,20 +17,13 @@ struct VideoSectionView: View {
                     .frame(maxWidth: .infinity)
                     .cornerRadius(10)
                     .onAppear {
-                                    videoViewModel.setupPlayer(with: item.url)
+                        videoViewModel.setupPlayer(with: item.url)
                         feedViewModel.setCurrentPlaying(item.id)
-                                }
-                                .onDisappear {
-                                    videoViewModel.cleanup()
-                                }
-//                                .onChange(of: feedViewModel.currentPlayingId) { oldId, newId in
-//                                    if newId == item.id {
-//                                        videoViewModel.play()
-//                                    } else {
-//                                        videoViewModel.pause()
-//                                    }
-//                                }
-                    
+                    }
+                    .onDisappear {
+                        videoViewModel.cleanup()
+                    }
+                
             }
         }
     }

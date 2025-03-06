@@ -13,6 +13,7 @@ struct ImageCardView: View {
     let preferWidth: CGFloat?
     let preferHeight: CGFloat?
     let targetWidth: CGFloat?
+    let priceTags: [PriceTagItem]?
     @State private var showTag = false
     @State private var tagPosition: (x: CGFloat, y: CGFloat)? = nil
     @State private var tagPrice: String? = nil
@@ -32,7 +33,12 @@ struct ImageCardView: View {
                                 ZStack {
                                     Color.clear
                                         .onAppear {
-                                            loadTags(geometry.size)
+                                            if let tags = priceTags {
+                                                for tag in tags {
+                                                    loadTags(geometry.size, priceTagItem: tag)
+                                                }
+                                            }
+                                            
                                         }
                                     
                                     if let (x, y) = tagPosition, !isAd {
@@ -66,29 +72,29 @@ struct ImageCardView: View {
                                                 }
                                         }
                                         if showTag, let price = tagPrice {
-                                                let tagHeight: CGFloat = 40
-                                                let tagWidth: CGFloat = 100
-                                                
-                                                let isTopHalf = y < geometry.size.height / 2
-                                                let spacing: CGFloat = isTopHalf ? 10 : 5
-                                                
-                                                let priceY = isTopHalf ?
-                                                    min(y + tagHeight/2 + spacing, geometry.size.height - tagHeight/2) :
-                                                    max(y - tagHeight/2 - spacing, tagHeight/2)
-                                                
-                                                let priceX = max(tagWidth/2, min(x, geometry.size.width - tagWidth/2))
-                                                
-                                                VStack {
-                                                    Text(price)
-                                                        .font(.subheadline)
-                                                        .padding(8)
-                                                        .background(Color.white)
-                                                        .cornerRadius(5)
-                                                        .shadow(radius: 2)
-                                                }
-                                                .position(x: priceX, y: priceY)
-                                                .transition(.opacity)
+                                            let tagHeight: CGFloat = 40
+                                            let tagWidth: CGFloat = 100
+                                            
+                                            let isTopHalf = y < geometry.size.height / 2
+                                            let spacing: CGFloat = isTopHalf ? 10 : 5
+                                            
+                                            let priceY = isTopHalf ?
+                                            min(y + tagHeight/2 + spacing, geometry.size.height - tagHeight/2) :
+                                            max(y - tagHeight/2 - spacing, tagHeight/2)
+                                            
+                                            let priceX = max(tagWidth/2, min(x, geometry.size.width - tagWidth/2))
+                                            
+                                            VStack {
+                                                Text(price)
+                                                    .font(.subheadline)
+                                                    .padding(8)
+                                                    .background(Color.white)
+                                                    .cornerRadius(5)
+                                                    .shadow(radius: 2)
                                             }
+                                            .position(x: priceX, y: priceY)
+                                            .transition(.opacity)
+                                        }
                                     }
                                     
                                     
@@ -112,27 +118,25 @@ struct ImageCardView: View {
         )
     }
     
-    private func loadTags(_ size: CGSize) {
-        tagPosition = (size.width * 0.1, size.height * 0.2)
-        tagPrice = "$99.99"
+    private func loadTags(_ size: CGSize, priceTagItem: PriceTagItem) {
+        tagPosition = (size.width * priceTagItem.x, size.height * priceTagItem.y)
+        tagPrice = priceTagItem.price
     }
     
     
     private var loadingView: some View {
-//        GeometryReader { geometry in
-            var targetHeight: CGFloat = 50
-            if let preferWidth = preferWidth{
-                targetHeight = (targetWidth ?? 0)*(preferHeight ?? 0)/preferWidth
-            }
-            return ZStack {
-                Rectangle()
-                    .fill(Color.gray.opacity(0.3))
-                    .cornerRadius(10)
-                    .frame(width: targetWidth, height: targetHeight)
-                ProgressView()
-                    .tint(.gray)
-            }
-//        }
+        var targetHeight: CGFloat = 50
+        if let preferWidth = preferWidth{
+            targetHeight = (targetWidth ?? 0)*(preferHeight ?? 0)/preferWidth
+        }
+        return ZStack {
+            Rectangle()
+                .fill(Color.gray.opacity(0.3))
+                .cornerRadius(10)
+                .frame(width: targetWidth, height: targetHeight)
+            ProgressView()
+                .tint(.gray)
+        }
     }
     private var failureView: some View {
         ZStack {

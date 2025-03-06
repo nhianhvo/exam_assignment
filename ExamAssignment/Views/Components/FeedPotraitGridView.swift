@@ -99,7 +99,7 @@ private struct ScrollViewReaderContent: View {
                             
                             MasonryVStack(columns: Int(columns), spacing: spacing) {
                                 ForEach(patch.images) { item in
-                                    ImageCardView(url: item.url, isAd: item.isAd, preferWidth: CGFloat(item.width ?? 0), preferHeight: CGFloat(item.height ?? 0), targetWidth: CGFloat((geometry.size.width - (columns-1)*spacing)/columns))
+                                    ImageCardView(url: item.url, isAd: item.isAd, preferWidth: CGFloat(item.width ?? 0), preferHeight: CGFloat(item.height ?? 0), targetWidth: CGFloat((geometry.size.width - (columns-1)*spacing)/columns), priceTags: item.price_tags )
                                         .id(item.id)
                                 }
                             }
