@@ -27,7 +27,7 @@ struct FeedView: View {
         NavigationStack {
             GeometryReader{ geometry in
                 let isLandscape = geometry.size.width > geometry.size.height
-                let videoHeight = isLandscape ? geometry.size.height * 0.99 : geometry.size.height * 0.25
+                let videoHeight = isLandscape ? geometry.size.height * 0.92 : geometry.size.height * 0.25
                 if appViewModel.isLandscape {
                     FeedLandscapeGridView(columns: 2, onLoadMore: {
                         Task {
@@ -53,7 +53,6 @@ struct FeedView: View {
         }.navigationTitle("Examination")
          .navigationBarTitleDisplayMode(.inline)
          .ignoresSafeArea(.keyboard)
-         .environmentObject(PlayerCoordinator.shared)
          .environmentObject(viewModel)
         .onAppear {
             viewModel.loadInitialData()
@@ -71,13 +70,6 @@ struct FeedView: View {
                 },
                 onRefresh: {
                     await viewModel.loadPrevData()
-                },
-                onScroll: { isScrolling in
-                    if isScrolling {
-                        videoViewModel.pause()
-                    } else {
-                        videoViewModel.play()
-                    }
                 },
                 videoHeight: sizeHeight
             )
