@@ -12,7 +12,7 @@ struct ImageCardView: View {
     let isAd: Bool
     let preferWidth: CGFloat?
     let preferHeight: CGFloat?
-//    let targetWidth: CGFloat?
+    let targetWidth: CGFloat?
     @State private var showTag = false
     @State private var tagPosition: (x: CGFloat, y: CGFloat)? = nil
     @State private var tagPrice: String? = nil
@@ -44,17 +44,17 @@ struct ImageCardView: View {
                 }
             }
             
-//            if let (x, y) = tagPosition, !isAd {
-//                Circle()
-//                    .frame(width: 10, height: 10)
-//                    .foregroundColor(.blue)
-//                    .position(x: x, y: y)
-//                    .onTapGesture {
-//                        withAnimation(.easeInOut(duration: 0.3)) {
-//                            showTag.toggle()
-//                        }
-//                    }
-//            }
+            //            if let (x, y) = tagPosition, !isAd {
+            //                Circle()
+            //                    .frame(width: 10, height: 10)
+            //                    .foregroundColor(.blue)
+            //                    .position(x: x, y: y)
+            //                    .onTapGesture {
+            //                        withAnimation(.easeInOut(duration: 0.3)) {
+            //                            showTag.toggle()
+            //                        }
+            //                    }
+            //            }
             
             if showTag, let price = tagPrice, !isAd {
                 VStack {
@@ -80,14 +80,12 @@ struct ImageCardView: View {
         tagPrice = "$99.99"
     }
     
-
+    
     private var loadingView: some View {
-        
-        GeometryReader { geometry in
+//        GeometryReader { geometry in
             var targetHeight: CGFloat = 50
-            let targetWidth = geometry.size.width
             if let preferWidth = preferWidth{
-                targetHeight = targetWidth*(preferHeight ?? 0)/preferWidth
+                targetHeight = (targetWidth ?? 0)*(preferHeight ?? 0)/preferWidth
             }
             return ZStack {
                 Rectangle()
@@ -97,43 +95,43 @@ struct ImageCardView: View {
                 ProgressView()
                     .tint(.gray)
             }
-        }
-        }
+//        }
+    }
     private var failureView: some View {
         ZStack {
-                Rectangle()
-                    .fill(Color.gray.opacity(0.3))
-                    .cornerRadius(10)
-                
+            Rectangle()
+                .fill(Color.gray.opacity(0.3))
+                .cornerRadius(10)
+            
             VStack(spacing: 8) {
-                    Image(systemName: "photo.fill")
-                        .font(.system(size: 60))
-                        .foregroundColor(.gray)
-                    
-                    Text("Image not found")
-                        .font(.caption)
-                        .foregroundColor(.gray)
-                }
+                Image(systemName: "photo.fill")
+                    .font(.system(size: 60))
+                    .foregroundColor(.gray)
+                
+                Text("Image not found")
+                    .font(.caption)
+                    .foregroundColor(.gray)
             }
         }
-        
+    }
+    
     private var unknownView: some View {
         ZStack {
-                Rectangle()
-                    .fill(Color.gray.opacity(0.3))
-                    .cornerRadius(10)
+            Rectangle()
+                .fill(Color.gray.opacity(0.3))
+                .cornerRadius(10)
+            
+            VStack(spacing: 8) {
+                Image(systemName: "questionmark.circle.fill")
+                    .font(.system(size: 60))
+                    .foregroundColor(.gray)
                 
-                VStack(spacing: 8) {
-                    Image(systemName: "questionmark.circle.fill")
-                        .font(.system(size: 60))
-                        .foregroundColor(.gray)
-                    
-                    Text("Unknown error")
-                        .font(.caption)
-                        .foregroundColor(.gray)
-                }
+                Text("Unknown error")
+                    .font(.caption)
+                    .foregroundColor(.gray)
             }
         }
-        
+    }
+    
 }
 

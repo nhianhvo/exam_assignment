@@ -36,7 +36,7 @@ struct FeedLandscapeGridView: View {
                 
                 MasonryVStack(columns: columns, spacing: 5) {
                     ForEach(feedViewModel.feedItems) { item in
-                        ImageCardView(url: item.url, isAd: item.isAd, preferWidth: CGFloat(item.width ?? 0), preferHeight: CGFloat(item.height ?? 0))
+                        ImageCardView(url: item.url, isAd: item.isAd, preferWidth: CGFloat(item.width ?? 0), preferHeight: CGFloat(item.height ?? 0), targetWidth: 0)
                             .id(item.id)
                     }
                 }
