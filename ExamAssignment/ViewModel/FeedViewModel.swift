@@ -78,10 +78,10 @@ class FeedViewModel: ObservableObject {
     func loadInitialData() {
         let data = FeedRepository.fetchData()
         var items: [FeedItem] = []
-        videoItem = FeedItem(id: 0, url: data.video, isVideo: true, isAd: false, width: 0, height: 0)
-        items.append(FeedItem(id: 0, url: data.video, isVideo: true, isAd: false, width: 0, height: 0))
+        videoItem = FeedItem(id: 0, url: data.video, isVideo: true, isAd: false, width: 0, height: 0, price_tags: nil)
+        items.append(FeedItem(id: 0, url: data.video, isVideo: true, isAd: false, width: 0, height: 0, price_tags: nil))
         let images = data.images.map {
-            FeedItem(id: $0.id, url: $0.url, isVideo: false, isAd: false, width: $0.width, height: $0.height)
+            FeedItem(id: $0.id, url: $0.url, isVideo: false, isAd: false, width: $0.width, height: $0.height, price_tags: $0.price_tags)
         }
         items.append(contentsOf: images)
         feedItems = mixAdvToFeedItems(items: images)
@@ -105,9 +105,9 @@ class FeedViewModel: ObservableObject {
         let lastItemId = lastPatch.images.last?.id ?? lastPatch.video.id
         
         if let data = FeedRepository.fetchNewData(fromIndex: lastItemId){
-            let videoItem = FeedItem(id: lastItemId + 1, url: data.video,isVideo: true, isAd: false, width: 0, height: 0)
+            let videoItem = FeedItem(id: lastItemId + 1, url: data.video,isVideo: true, isAd: false, width: 0, height: 0, price_tags: nil)
             let imagesItem = data.images.map {
-                FeedItem(id: $0.id, url:  $0.url, isVideo: false, isAd: false, width: $0.width, height: $0.height)
+                FeedItem(id: $0.id, url:  $0.url, isVideo: false, isAd: false, width: $0.width, height: $0.height, price_tags: $0.price_tags)
             }
             try? await Task.sleep(nanoseconds: 1_000_000_000)
             await MainActor.run {
@@ -141,9 +141,9 @@ class FeedViewModel: ObservableObject {
             }
         
         if let fromIndex = firstPatch.images.first?.id, let data = FeedRepository.fetchOldData(fromIndex: fromIndex){
-            let videoItems = FeedItem(id: 0, url: data.video, isVideo: true, isAd: false, width: 0, height: 0)
+            let videoItems = FeedItem(id: 0, url: data.video, isVideo: true, isAd: false, width: 0, height: 0, price_tags: nil)
             let newItems = data.images.map {
-                FeedItem(id: $0.id, url: $0.url, isVideo: false, isAd: false, width: $0.width, height: $0.height)
+                FeedItem(id: $0.id, url: $0.url, isVideo: false, isAd: false, width: $0.width, height: $0.height, price_tags: $0.price_tags)
             }
             
             let newFeedItems: [FeedItem] = [videoItems] + newItems
@@ -167,7 +167,7 @@ class FeedViewModel: ObservableObject {
             let fibonacciIndices = Utils.getFibonacciArray(count: items.count)
             for index in fibonacciIndices where index < items.count {
                 if let ad = advData.ads.randomElement() {
-                    result.insert(FeedItem(id: ad.id, url: ad.url, isVideo: false, isAd: true, width: ad.width, height:ad.height), at: index)
+                    result.insert(FeedItem(id: ad.id, url: ad.url, isVideo: false, isAd: true, width: ad.width, height:ad.height, price_tags: nil), at: index)
                 }
             }
         }
