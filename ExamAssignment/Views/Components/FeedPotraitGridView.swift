@@ -46,6 +46,8 @@ private struct ScrollViewReaderContent: View {
     @State private var lastScrollTime = Date()
     @State private var isDragging = false
     @State private var currentVideoIndex: Int = 0
+    @State private var timer: Timer?
+    @State private var lastOffset: CGFloat = 0
     let spacing: CGFloat = 5
     
     func getTriggerZone(for index: Int) -> (start: CGFloat, end: CGFloat) {
@@ -97,7 +99,6 @@ private struct ScrollViewReaderContent: View {
                                         geometry.frame(in: .global)
                                     }
                                 })
-                            
                             MasonryVStack(columns: Int(columns), spacing: spacing) {
                                 ForEach(patch.images) { item in
                                     ImageCardView(url: item.url, isAd: item.isAd, preferWidth: CGFloat(item.width ?? 0), preferHeight: CGFloat(item.height ?? 0), targetWidth: CGFloat((geometry.size.width - (columns-1)*spacing)/columns), priceTags: item.price_tags )
@@ -134,7 +135,10 @@ private struct ScrollViewReaderContent: View {
                 )
                 .coordinateSpace(name: "scroll")
                 .onChange(of: scrollOffset) { oldValue, newValue in
+<<<<<<< HEAD
                     
+=======
+>>>>>>> implement/add_touch_points
                     if let currentIndex = getCurrentIndex(from: newValue) {
                         self.currentVideoIndex = currentIndex
                         let patch = feedViewModel.patches[currentIndex]
@@ -152,8 +156,6 @@ private struct ScrollViewReaderContent: View {
                                 withAnimation(.easeOut(duration: 0.3)) {
                                     scrollProxy.scrollTo("Video-\(targetPatch.id)", anchor: .top)
                                 }
-                                
-                                
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                                     checkPlayOrPauseVideo(currentIndex: currentIndex)
                                     isAutoScrolling = false
@@ -164,19 +166,18 @@ private struct ScrollViewReaderContent: View {
                     lastScrollTime = Date()
                 }
                 .onPreferenceChange(ScrollOffsetPreferenceKey.self) { offset in
-                    let oldOffset = scrollOffset
+                    isScrolling = true
                     scrollOffset = offset
-                    
-                    let isCurrentlyScrolling = abs(oldOffset - offset) > 1
-                    
-                    if isCurrentlyScrolling != isScrolling {
-                        isScrolling = isCurrentlyScrolling
-                        if !isScrolling {
-                            print("playing: \(currentVideoIndex)")
+                    timer?.invalidate() // Reset timer
+                    feedViewModel.videoViewModels.forEach { $0.pause() }
+                    // Delay detection to check if scrolling stops
+                    timer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false) { _ in
+                        if abs(offset - lastOffset) < 1 {
+                            print("Scrolling stopped (didEndDecelerating)")
+                            isScrolling = false
                             checkPlayOrPauseVideo(currentIndex: currentVideoIndex)
-                        }else{
-                            feedViewModel.videoViewModels.forEach { $0.pause() }
                         }
+                        lastOffset = offset
                     }
                     
                     let threshold: CGFloat = 200
@@ -187,6 +188,7 @@ private struct ScrollViewReaderContent: View {
             }
         }
     }
+    
     
     private func checkPlayOrPauseVideo(currentIndex: Int){
         for (index, videoViewModel) in feedViewModel.videoViewModels.enumerated() {
